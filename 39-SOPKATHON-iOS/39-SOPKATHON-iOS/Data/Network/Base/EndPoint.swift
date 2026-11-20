@@ -1,6 +1,6 @@
 //
 //  EndPoint.swift
-//  39-SOPKATON-iOS
+//  39-SOPKATHON-iOS
 //
 //  Created by 김세령 on 11/20/26.
 //

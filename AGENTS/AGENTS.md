@@ -6,9 +6,9 @@
 ## 프로젝트 기준
 
 - SwiftUI, 최소 iOS 17.0, 라이트 모드 고정임. 새 API의 지원 버전 확인 필요.
-- 프로젝트: `39-SOPKATON-iOS/39-SOPKATON-iOS.xcodeproj`
-- 소스: `39-SOPKATON-iOS/39-SOPKATON-iOS/`
-- 저장소명과 프로젝트 폴더의 철자가 다르므로 경로를 임의로 변경하지 않음.
+- 프로젝트: `39-SOPKATHON-iOS/39-SOPKATHON-iOS.xcodeproj`
+- 소스: `39-SOPKATHON-iOS/39-SOPKATHON-iOS/`
+- 프로젝트 경로와 이름은 `SOPKATHON` 표기를 사용함. 경로 변경 시 빌드 설정도 함께 갱신함.
 
 ## AI 사용 원칙
 

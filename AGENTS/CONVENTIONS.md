@@ -5,7 +5,7 @@
 ## 폴더 구조
 
 ```text
-39-SOPKATON-iOS/39-SOPKATON-iOS/
+39-SOPKATHON-iOS/39-SOPKATHON-iOS/
 ├── Application/                 # 앱 진입점
 ├── Data/
 │   └── Network/
