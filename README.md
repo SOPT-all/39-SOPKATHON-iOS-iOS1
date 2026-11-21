@@ -58,8 +58,8 @@
   <tr>
     <td align="center"><code>소리 줄다리기</code><br><code>해당 게임 전체 플로우</code></td>
     <td align="center"><code>경마 연타 전체</code><br><code>해당 게임 전체 플로우</code></td>
-    <td align="center"><code>앱 진입 플로우, 종료 화면</code><br><code>초대 링크를 딥링크</code></td>
     <td align="center"><code>앱 진입 플로우</code><br><code>랭킹 화면</code></td>
+    <td align="center"><code>앱 진입 플로우, 종료 화면</code><br><code>초대 링크를 딥링크</code></td>
   </tr>
 </table>
 
