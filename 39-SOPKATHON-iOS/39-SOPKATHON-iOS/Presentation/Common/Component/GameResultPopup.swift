@@ -137,7 +137,7 @@ private extension GameResultPopup {
         case .finishTime(let milliseconds):
             return String(format: "%.2f초", Double(milliseconds) / 1000)
         case .demoDecibel(let decibel):
-            return String(format: "%.1fdB(시연)", decibel)
+            return String(format: "%.1fdB", decibel)
         }
     }
 

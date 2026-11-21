@@ -97,16 +97,11 @@ struct SoundTugView: View {
     }
 
     private var gameOver: some View {
-        let retry: (() -> Void)? = viewModel.resultState == .failed
-            ? { viewModel.loadResult() } : nil
-        return SoundTugGameOver(
+        SoundTugGameOver(
             personalDecibel: viewModel.highestDecibel,
             result: viewModel.result,
             onNextGame: onNextGame,
-            onGoHome: onGoHome,
-            isLoading: viewModel.isLoadingResult,
-            statusMessage: viewModel.resultMessage,
-            onRetry: retry
+            onGoHome: onGoHome
         )
     }
 
@@ -116,7 +111,7 @@ struct SoundTugView: View {
                 Text("개인 기록")
                     .appFont(.bodyLSemiBold)
                 Spacer()
-                Text("최고 \(viewModel.highestDecibel, specifier: "%.1f")dB(시연)")
+                Text("최고 \(viewModel.highestDecibel, specifier: "%.1f")dB")
                     .appFont(.bodyLSemiBold)
             }
             .foregroundStyle(.black)
@@ -130,7 +125,7 @@ struct SoundTugView: View {
                             width: geometry.size.width
                                 * CGFloat(viewModel.currentDecibel / 120)
                         )
-                    Text("현재 \(viewModel.currentDecibel, specifier: "%.1f")dB(시연)")
+                    Text("현재 \(viewModel.currentDecibel, specifier: "%.1f")dB")
                         .appFont(.bodyLSemiBold)
                         .foregroundStyle(Color(white: 84 / 255))
                         .padding(.horizontal, 14)
@@ -140,8 +135,8 @@ struct SoundTugView: View {
             .frame(height: 41)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(
-                Text("현재 \(viewModel.currentDecibel, specifier: "%.1f") 시연 데시벨, ")
-                    + Text("이번 측정 최고 \(viewModel.highestDecibel, specifier: "%.1f") 시연 데시벨")
+                Text("현재 \(viewModel.currentDecibel, specifier: "%.1f") 데시벨, ")
+                    + Text("이번 측정 최고 \(viewModel.highestDecibel, specifier: "%.1f") 데시벨")
             )
         }
         .monospacedDigit()
