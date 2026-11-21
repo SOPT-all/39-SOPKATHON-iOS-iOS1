@@ -11,6 +11,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A47C0F1E2026112200000001 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = "39-SOPKATHON-iOS/Config.xcconfig"; sourceTree = SOURCE_ROOT; };
 		3B765EF430B0819000A2A96B /* 39-SOPKATHON-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "39-SOPKATHON-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -18,6 +19,7 @@
 		A91B6C7D2E3F401588990001 /* Exceptions for "39-SOPKATHON-iOS" folder in "39-SOPKATHON-iOS" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Config.xcconfig,
 				Data/Network/DTO/.gitkeep,
 				Info.plist,
 				Presentation/Common/Component/.gitkeep,
@@ -53,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				3B765EF630B0819000A2A96B /* 39-SOPKATHON-iOS */,
+				A47C0F1E2026112200000001 /* Config.xcconfig */,
 				3B765EF530B0819000A2A96B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 		};
 		3B765F0030B0819200A2A96B /* Debug configuration for PBXNativeTarget "39-SOPKATHON-iOS" */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A47C0F1E2026112200000001 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -302,6 +306,7 @@
 		};
 		3B765F0130B0819200A2A96B /* Release configuration for PBXNativeTarget "39-SOPKATHON-iOS" */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A47C0F1E2026112200000001 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
