@@ -40,14 +40,17 @@
 
 ```swift
 Text("제목")
-    .font(AppFont.title)
+    .appFont(.headerMBold)
 
 Text("내용")
-    .font(.pretendard(.semiBold, size: 18))
+    .appFont(.bodyLRegular)
 ```
 
-- `AppFont.title`, `body`, `caption`은 임시 스타일임. 디자인 확정 후 이름·굵기·크기를 수정하고 화면에서 재사용함.
+- `AppFont`는 Figma 디자인시스템 Typography 16종이며 이름은 `역할/크기/굵기`를 따름. 예: `Body/L/Regular` → `.bodyLRegular`.
+- `.appFont(_:)`는 폰트와 Figma 행간을 함께 적용함. 행간이 필요 없으면 `.font(AppFont.bodyLRegular.font)` 사용함.
+- 디자인시스템에 없는 크기만 `.pretendard(_:size:)`로 직접 지정함.
 - 현재 폰트 확장은 고정 크기 방식임.
+- 공통 색상은 Assets의 `Color` 폴더에 Figma 이름(`grey-1` ~ `grey-10`)으로 둠. 사용 예: `.foregroundStyle(.grey10)`.
 - 폰트 추가 시 실제 PostScript 이름과 `Info.plist`의 `UIAppFonts` 등록 확인 필요.
 - 공통 색상·이미지는 기존 Assets를 확인한 뒤 추가함. 같은 리소스의 중복 생성 지양.
 - `Info.plist`는 빌드 설정에서 참조하며 Copy Bundle Resources에 포함하지 않음.
