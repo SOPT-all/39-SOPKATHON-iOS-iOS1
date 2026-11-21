@@ -10,7 +10,8 @@ import Foundation
 /// 홈 멤버 카드에 표시하는 반 멤버.
 struct HomeMember: Identifiable {
 
-    let id = UUID()
+    /// 서버 멤버 ID
+    let id: Int
     let name: String
     let isActive: Bool
 

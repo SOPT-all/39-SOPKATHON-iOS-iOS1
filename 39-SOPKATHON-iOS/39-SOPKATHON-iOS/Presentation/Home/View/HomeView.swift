@@ -19,7 +19,9 @@ struct HomeView: View {
             header
                 .padding(.top, 21)
 
+            // 시연 학급(1학년 1반) 고정 손글씨. 서버 학년·반은 요청 값으로만 사용함.
             Image(.imgTitleClass)
+                .accessibilityLabel("1학년 1반 선수")
                 .padding(.top, 22)
                 .padding(.horizontal, 20)
 
@@ -35,6 +37,16 @@ struct HomeView: View {
             HomeBackground()
         }
         .toolbar(.hidden, for: .navigationBar)
+        // 게임·랭킹에서 돌아올 때도 다시 조회해 멤버 목록을 갱신함.
+        .task { await viewModel.fetchHome() }
+        .alert("홈 정보를 불러오지 못했어요", isPresented: $viewModel.isShowingError) {
+            Button("다시 시도") {
+                Task { await viewModel.fetchHome() }
+            }
+            Button("확인", role: .cancel) {}
+        } message: {
+            Text(viewModel.errorMessage)
+        }
     }
 
 }
@@ -43,8 +55,10 @@ private extension HomeView {
 
     var header: some View {
         HStack(spacing: 18) {
-            ProfileAvatar(name: viewModel.myName, size: 48)
-            SchoolTag(title: viewModel.schoolName)
+            if !viewModel.myName.isEmpty {
+                ProfileAvatar(name: String(viewModel.myName.suffix(2)), size: 48)
+                SchoolTag(title: viewModel.schoolName)
+            }
 
             Spacer(minLength: 0)
 
@@ -60,7 +74,18 @@ private extension HomeView {
         .padding(.horizontal, 20)
     }
 
+    @ViewBuilder
     var memberList: some View {
+        if viewModel.members.isEmpty, viewModel.isLoading {
+            ProgressView()
+                .frame(maxWidth: .infinity)
+                .frame(height: 146)
+        } else {
+            memberScroll
+        }
+    }
+
+    var memberScroll: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 ForEach(viewModel.members) { member in
