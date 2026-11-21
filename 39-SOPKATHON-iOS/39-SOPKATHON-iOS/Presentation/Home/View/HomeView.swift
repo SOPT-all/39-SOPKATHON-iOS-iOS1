@@ -9,38 +9,31 @@ import SwiftUI
 
 struct HomeView: View {
 
+    let onStartGame: () -> Void
+
     @State private var viewModel = HomeViewModel()
-    @State private var isGameRoomPresented = false
 
     var body: some View {
-        // 홈이 화면 이동 스택을 소유함. 상위 화면에서 NavigationStack으로 다시 감싸지 않음.
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 0) {
-                header
-                    .padding(.top, 21)
+        VStack(alignment: .leading, spacing: 0) {
+            header
+                .padding(.top, 21)
 
-                Image(.imgTitleClass)
-                    .padding(.top, 22)
-                    .padding(.horizontal, 20)
-
-                memberList
-                    .padding(.top, 16)
-
-                Spacer(minLength: 0)
-
-                PrimaryButton(title: "게임 시작하기") {
-                    isGameRoomPresented = true
-                }
+            Image(.imgTitleClass)
+                .padding(.top, 22)
                 .padding(.horizontal, 20)
-            }
-            .background(alignment: .topLeading) {
-                HomeBackground()
-            }
-            .toolbar(.hidden, for: .navigationBar)
-            .navigationDestination(isPresented: $isGameRoomPresented) {
-                GameRoomView()
-            }
+
+            memberList
+                .padding(.top, 16)
+
+            Spacer(minLength: 0)
+
+            PrimaryButton(title: "게임 시작하기", action: onStartGame)
+                .padding(.horizontal, 20)
         }
+        .background(alignment: .topLeading) {
+            HomeBackground()
+        }
+        .toolbar(.hidden, for: .navigationBar)
     }
 
 }

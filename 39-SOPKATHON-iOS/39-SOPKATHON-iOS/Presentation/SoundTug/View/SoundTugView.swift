@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SoundTugView: View {
 
+    let onFinish: (Double) -> Void
+
     @Environment(\.scenePhase) private var scenePhase
     @State private var viewModel = SoundTugViewModel()
 
@@ -66,6 +68,11 @@ struct SoundTugView: View {
         }
         .background(backgroundColor.ignoresSafeArea())
         .onDisappear { viewModel.cancel() }
+        .onChange(of: viewModel.state) { _, state in
+            if state == .finished {
+                onFinish(viewModel.highestScore)
+            }
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background {
                 viewModel.cancel()
