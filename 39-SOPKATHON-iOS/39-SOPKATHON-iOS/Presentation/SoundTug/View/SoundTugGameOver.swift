@@ -9,10 +9,13 @@ import SwiftUI
 
 struct SoundTugGameOver: View {
 
-    let personalScore: Double
+    let personalDecibel: Double
     let result: SoundTugResult?
     let onNextGame: () -> Void
     let onGoHome: () -> Void
+    let isLoading: Bool
+    let statusMessage: String?
+    let onRetry: (() -> Void)?
 
     var body: some View {
         ZStack {
@@ -23,15 +26,17 @@ struct SoundTugGameOver: View {
                 mySchool: result?.mySchool ?? "우리 팀",
                 opponentSchool: result?.opponentSchool ?? "상대 팀",
                 isWin: isWin,
-                myTeamRecord: result.map { .volumeScore($0.myTeamTotalScore) },
-                opponentTeamRecord: result.map { .volumeScore($0.opponentTeamTotalScore) },
+                myTeamRecord: result?.myTeamTotalDecibel.map { .demoDecibel($0) },
+                opponentTeamRecord: result?.opponentTeamTotalDecibel.map { .demoDecibel($0) },
                 score: result?.reward,
                 onNextGame: onNextGame,
                 onGoHome: onGoHome,
-                teamRecordTitle: "총 음량 점수",
-                personalRecord: .volumeScore(personalScore),
-                personalRecordTitle: "내 최고 음량 점수",
-                resultMessage: resultMessage
+                teamRecordTitle: "총 음량",
+                personalRecord: .demoDecibel(personalDecibel),
+                personalRecordTitle: "내 최고 음량",
+                resultMessage: resultMessage,
+                isLoading: isLoading,
+                onRetry: onRetry
             )
             .offset(y: -33)
         }
@@ -51,7 +56,7 @@ struct SoundTugGameOver: View {
         case .win, .lose: nil
         case .draw: "무승부"
         case .invalid: "무효 경기"
-        case nil: "팀 결과를 확인할 수 없어요."
+        case nil: statusMessage
         }
     }
 

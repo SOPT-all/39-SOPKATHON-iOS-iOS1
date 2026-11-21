@@ -55,8 +55,8 @@ struct RootView: View {
             )
         case .tugOfWar:
             SoundTugView(
-                onFinish: { score in
-                    viewModel.finishGame(.tugOfWar(score: score))
+                onFinish: { decibel in
+                    viewModel.finishGame(.tugOfWar(maxDecibel: decibel))
                 },
                 onNextGame: { viewModel.finishToGameRoom(from: .tugOfWar) },
                 onGoHome: { viewModel.popToRoot() }
