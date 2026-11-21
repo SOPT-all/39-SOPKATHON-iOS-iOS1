@@ -10,6 +10,8 @@ import SwiftUI
 struct RootView: View {
 
     @State private var viewModel = RootViewModel()
+    /// 앱 시작 시 스플래시를 홈 위에 덮어 두고, 러너가 지나가면 걷어냄.
+    @State private var isShowingSplash = true
 
     var body: some View {
         NavigationStack(path: $viewModel.path) {
@@ -19,6 +21,16 @@ struct RootView: View {
             )
             .navigationDestination(for: AppRoute.self) { route in
                 destination(for: route)
+            }
+        }
+        .overlay {
+            if isShowingSplash {
+                SplashView {
+                    withAnimation(.easeOut(duration: 0.4)) {
+                        isShowingSplash = false
+                    }
+                }
+                .transition(.opacity)
             }
         }
     }
