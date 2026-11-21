@@ -6,17 +6,19 @@
 //
 
 enum HeaderType {
-    // TODO: JSON 공통 헤더임. 서버 명세에 맞춰 수정 필요.
-    // 인증 방식 확정 후 별도 헤더 추가 필요.
+
     case basic
+    case demoMember(memberID: Int)
 
     var value: [String: String] {
-        switch self {
-        case .basic:
-            return [
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            ]
+        var headers = [
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        ]
+        if case .demoMember(let memberID) = self {
+            headers["X-Demo-Member-Id"] = String(memberID)
         }
+        return headers
     }
+
 }
