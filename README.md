@@ -142,4 +142,4 @@ PR 제목   [docs/#17] README 템플릿 작성
 
 ## 06 · After — 해커톤이 지나간 자리…
 
-<img src="docs/images/team-after.png" width="800" alt="39기 솝커톤 iOS 1조 해커톤 종료 후 사진" />
+<img src="docs/images/team-after.jpg" width="800" alt="39기 솝커톤 iOS 1조 해커톤 종료 후 사진" />
