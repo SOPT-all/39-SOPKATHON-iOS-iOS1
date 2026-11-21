@@ -13,9 +13,10 @@ struct RootView: View {
 
     var body: some View {
         NavigationStack(path: $viewModel.path) {
-            HomeView {
-                viewModel.push(.gameRoom)
-            }
+            HomeView(
+                onStartGame: { viewModel.push(.matching) },
+                onShowRanking: { viewModel.push(.ranking) }
+            )
             .navigationDestination(for: AppRoute.self) { route in
                 destination(for: route)
             }
@@ -25,6 +26,8 @@ struct RootView: View {
     @ViewBuilder
     private func destination(for route: AppRoute) -> some View {
         switch route {
+        case .matching:
+            GameWaitingView(onMatched: { viewModel.finishMatching() })
         case .gameRoom:
             GameRoomView(
                 onBack: { viewModel.pop() },
@@ -33,6 +36,9 @@ struct RootView: View {
         case .game(let game):
             gameDestination(for: game)
                 .toolbar(.hidden, for: .navigationBar)
+        case .ranking:
+            // 뒤로가기는 RankingView가 dismiss()로 처리함.
+            RankingView()
         }
     }
 

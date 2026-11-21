@@ -4,7 +4,8 @@
 - 상태: 진행 중
 
 ## 흐름
-앱 시작(`RootView`) → 내 프로필·학교·반 멤버 확인 → "게임 시작하기" → `onStartGame`으로 루트가 게임방 push
+앱 시작(`RootView`) → 내 프로필·학교·반 멤버 확인 → "게임 시작하기" → `onStartGame`으로 루트가 매칭 대기 push
+우측 상단 랭킹 아이콘 → `onShowRanking`으로 루트가 랭킹 화면 push
 
 ## 주요 파일
 | 파일 | 역할 |
@@ -24,4 +25,4 @@
 - 공통 컴포넌트는 `Presentation/Common/Component` 참고(`PrimaryButton`, `SchoolTag`, `ProfileAvatar`, `TopNavi`).
 
 ## 주의·남은 일
-- 온보딩 정보·멤버 API 연동 전임. 랭킹 아이콘은 아직 동작 없음.
+- 온보딩 정보·멤버 API 연동 전임.

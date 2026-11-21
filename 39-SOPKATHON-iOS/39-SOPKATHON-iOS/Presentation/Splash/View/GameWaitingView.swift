@@ -7,8 +7,15 @@
 
 import SwiftUI
 
+import Lottie
+
 /// 상대 팀 매칭이 완료될 때까지 표시하는 대기 화면.
 struct GameWaitingView: View {
+
+    /// 매칭이 끝나면 한 번 호출함.
+    let onMatched: () -> Void
+
+    private let matchingDuration: Duration = .seconds(4)
 
     var body: some View {
         GeometryReader { geometry in
@@ -22,8 +29,21 @@ struct GameWaitingView: View {
                     y: geometry.size.height / 2
                 )
         }
-        .background(.white)
+        // Figma 최종 UI `탐색중` 배경(Gray/gray-700). 디자인시스템 grey 토큰에 없는 값이라 직접 지정함.
+        .background(Color(hex: 0x545454))
         .ignoresSafeArea()
+        .toolbar(.hidden, for: .navigationBar)
+        .navigationBarBackButtonHidden()
+        .task {
+            // TODO: 매칭 API 연동 전까지 고정 시간 대기 후 매칭 완료로 처리함.
+            do {
+                try await Task.sleep(for: matchingDuration)
+            } catch {
+                // 화면을 벗어나 취소된 경우라 이동하지 않음.
+                return
+            }
+            onMatched()
+        }
     }
 
 }
@@ -32,8 +52,8 @@ private struct GameWaitingArtwork: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Image(.gameWaitingRunner)
-                .resizable()
+            LottieView(animation: .named("runner-run-cycle"))
+                .playing(loopMode: .loop)
                 .frame(
                     width: GameWaitingLayout.runnerFrame.width,
                     height: GameWaitingLayout.runnerFrame.height
@@ -45,8 +65,10 @@ private struct GameWaitingArtwork: View {
                 .accessibilityHidden(true)
 
             Image(.gameWaitingMessage)
+                .renderingMode(.template)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                .foregroundStyle(.white)
                 .frame(
                     width: GameWaitingLayout.messageFrame.width,
                     height: GameWaitingLayout.messageFrame.height
@@ -69,11 +91,12 @@ private enum GameWaitingLayout {
 
     static let canvasWidth: CGFloat = 375
     static let canvasHeight: CGFloat = 812
+    /// Figma `Component 1`(러너 Lottie 캔버스 전체) 위치·크기.
     static let runnerFrame = CGRect(
-        x: 134.7665,
-        y: 242,
-        width: 106.067,
-        height: 88.8002
+        x: 98.96,
+        y: 197.56,
+        width: 177.67,
+        height: 177.67
     )
     static let messageFrame = CGRect(
         x: 65.7189,

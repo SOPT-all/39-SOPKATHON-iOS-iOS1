@@ -37,6 +37,12 @@ final class RootViewModel {
         path.removeAll()
     }
 
+    /// 매칭 대기 화면을 게임방으로 교체함. 게임방에서 뒤로 가면 대기 화면을 건너뛰고 홈으로 감.
+    func finishMatching() {
+        guard path.last == .matching else { return }
+        path[path.count - 1] = .gameRoom
+    }
+
     func finishToGameRoom(from game: Game) {
         guard path.last == .game(game) else { return }
         path.removeLast()

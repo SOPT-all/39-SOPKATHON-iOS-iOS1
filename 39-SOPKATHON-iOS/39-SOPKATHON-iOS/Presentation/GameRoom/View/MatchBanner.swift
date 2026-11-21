@@ -20,6 +20,26 @@ struct MatchBanner: View {
     let isOpponentReady: Bool
 
     var body: some View {
+        // 종목 카드처럼 좌우 여백을 뺀 폭을 채우도록 Figma 배너를 비율 그대로 확대·축소함.
+        Color.clear
+            .aspectRatio(Layout.size.width / Layout.size.height, contentMode: .fit)
+            .overlay(alignment: .topLeading) {
+                GeometryReader { proxy in
+                    banner
+                        .scaleEffect(proxy.size.width / Layout.size.width, anchor: .topLeading)
+                }
+            }
+    }
+
+}
+
+private extension MatchBanner {
+
+    enum Layout {
+        static let size = CGSize(width: 335, height: 96)
+    }
+
+    var banner: some View {
         ZStack(alignment: .topLeading) {
             (isMyTeamReady ? Color.mainRed : Palette.idle)
 
@@ -47,15 +67,11 @@ struct MatchBanner: View {
                     .offset(x: 183, y: 9)
             }
         }
-        .frame(width: 335, height: 96)
+        .frame(width: Layout.size.width, height: Layout.size.height)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .animation(.easeInOut(duration: 0.25), value: isMyTeamReady)
         .animation(.easeInOut(duration: 0.25), value: isOpponentReady)
     }
-
-}
-
-private extension MatchBanner {
 
     enum Palette {
         static let idle = Color(hex: 0xD8D8D8)

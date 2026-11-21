@@ -67,7 +67,7 @@ private extension GameRoomView {
                     isMyTeamReady: viewModel.isMyTeamReady,
                     isOpponentReady: viewModel.isOpponentReady
                 )
-                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 20)
                 .padding(.top, 2)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
