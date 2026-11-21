@@ -15,8 +15,8 @@ struct HorseRaceResult: Equatable {
     /// 서버 `totalFinishTimeMilliseconds`와 같은 밀리초 단위임.
     let myTeamFinishTimeMilliseconds: Int64
     let opponentTeamFinishTimeMilliseconds: Int64
-    /// 서버가 정한 우리 팀 승패. 무승부는 팝업에 별도 표시가 없어 패배로 둠.
-    let isWin: Bool
+    /// 서버가 정한 우리 팀 승패. 무승부면 nil.
+    let isWin: Bool?
     /// 점수가 없으면 nil이며 "-"로 표시함.
     let score: Int?
 
@@ -34,12 +34,17 @@ extension HorseRaceResult {
         else {
             return nil
         }
+        let isWin: Bool? = switch myTeam.result {
+        case .win: true
+        case .lose: false
+        case .draw: nil
+        }
         self.init(
             mySchool: myTeam.schoolClassName,
             opponentSchool: opponentTeam.schoolClassName,
             myTeamFinishTimeMilliseconds: myTeamFinishTime,
             opponentTeamFinishTimeMilliseconds: opponentTeamFinishTime,
-            isWin: myTeam.result == .win,
+            isWin: isWin,
             // TODO: 점수 필드가 서버 명세에 없어 "-"로 표시함. 필드 추가 시 연결 필요.
             score: nil
         )

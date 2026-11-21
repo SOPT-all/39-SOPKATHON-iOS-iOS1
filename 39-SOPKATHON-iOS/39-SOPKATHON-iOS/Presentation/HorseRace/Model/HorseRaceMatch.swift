@@ -8,7 +8,7 @@
 import Foundation
 
 /// 경마 API 호출에 필요한 경기·참가자 정보.
-struct HorseRaceMatch: Equatable {
+struct HorseRaceMatch {
 
     let matchID: Int
     let memberID: Int

@@ -116,9 +116,12 @@ final class HorseRaceViewModel {
         var isRecordSubmitted = false
         while isWaitingForResult {
             do {
-                // 서버가 이미 제출한 기록은 바꾸지 않아 화면 재진입으로 다시 보내도 안전함.
                 if !isRecordSubmitted {
-                    try await submitRecord(elapsedMilliseconds, match: match)
+                    do {
+                        try await submitRecord(elapsedMilliseconds, match: match)
+                    } catch let error where Self.isServerRejection(error) {
+                        // 서버가 거절한 제출은 다시 보내도 같으므로 멈추고, 최종 상태는 상태 조회로 판단함.
+                    }
                     isRecordSubmitted = true
                 }
                 if let nextPhase = try await fetchPhaseAfterFinish(match: match) {
@@ -147,6 +150,20 @@ final class HorseRaceViewModel {
         )
     }
 
+    /// 서버가 응답했지만 제출을 받아들이지 않았거나 응답을 해석할 수 없는 경우.
+    /// 통신 오류·5xx는 일시적일 수 있어 false로 두고 다시 보냄.
+    private static func isServerRejection(_ error: Error) -> Bool {
+        guard let error = error as? NetworkError else { return false }
+        switch error {
+        case .httpError(let statusCode, _):
+            return (400..<500).contains(statusCode)
+        case .serverError, .noData, .responseDecodingError:
+            return true
+        case .urlError, .httpURLResponseError, .requestEncodingError, .transportError:
+            return false
+        }
+    }
+
     /// 경기가 아직 진행 중이면 nil을 반환함.
     private func fetchPhaseAfterFinish(match: HorseRaceMatch) async throws -> HorseRacePhase? {
         let statusResponse: MatchStatusResponseDTO = try await service.request(
@@ -161,11 +178,11 @@ final class HorseRaceViewModel {
             let resultResponse: MatchResultResponseDTO = try await service.request(
                 endPoint: .matchResult(matchID: match.matchID, memberID: match.memberID)
             )
-            // 팀 정보가 비어 있으면 결과 확정 전으로 보고 다음 간격에 다시 조회함.
+            // 종료가 확정된 뒤라 다시 조회해도 같은 결과임. 팀 슬롯 불일치 등으로 변환하지 못하면 종료 처리함.
             guard
                 let result = HorseRaceResult(response: resultResponse, myTeamSlot: match.teamSlot)
             else {
-                return nil
+                return .aborted
             }
             return .completed(result)
         }

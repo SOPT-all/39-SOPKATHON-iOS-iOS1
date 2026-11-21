@@ -31,7 +31,8 @@ struct HorseRaceGameOver: View {
                     ),
                     score: result.score,
                     onNextGame: onNextGame,
-                    onGoHome: onGoHome
+                    onGoHome: onGoHome,
+                    resultMessage: result.isWin == nil ? "무승부" : nil
                 )
                 // Figma 375 x 812 프레임에서 팝업 묶음이 화면 중앙보다 33pt 위에 있음.
                 .offset(y: -33)
