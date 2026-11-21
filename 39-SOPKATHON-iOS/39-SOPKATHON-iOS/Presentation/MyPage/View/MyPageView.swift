@@ -216,3 +216,7 @@ private enum MyPageLayout {
     )
 
 }
+
+#Preview {
+    MyPageView()
+}
