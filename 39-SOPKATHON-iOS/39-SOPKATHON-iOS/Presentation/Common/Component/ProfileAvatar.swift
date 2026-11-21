@@ -26,6 +26,8 @@ struct ProfileAvatar: View {
     let name: String?
     let size: CGFloat
     var style: Style = .dark
+    /// 이름·캐릭터 색을 스타일 기본값 대신 지정할 때 사용함. 예: VS 배너의 준비 완료 팀 색.
+    var letteringColor: Color?
 
     var body: some View {
         content
@@ -48,6 +50,8 @@ private extension ProfileAvatar {
 
     /// Figma에 손글씨 이미지로 그려진 이름.
     static let nameLetterings: [String: ImageResource] = [
+        "민서": .imgNameMinseo,
+        "지우": .imgNameJiu,
         "륜영": .imgNameRyunyeong,
         "수현": .imgNameSuhyeon
     ]
@@ -79,7 +83,8 @@ private extension ProfileAvatar {
     }
 
     var foregroundColor: Color {
-        switch style {
+        if let letteringColor { return letteringColor }
+        return switch style {
         case .dark: .white
         case .light: .black
         case .highlight: .mainRed
