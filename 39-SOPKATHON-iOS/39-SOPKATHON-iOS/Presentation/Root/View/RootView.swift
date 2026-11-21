@@ -41,7 +41,9 @@ struct RootView: View {
         switch game {
         case .horseRace:
             // 결과 팝업은 경마 화면이 직접 띄우고 버튼 신호만 받음. 다음 게임은 게임방에서 종목을 다시 고름.
+            // TODO: 게임방이 매칭 정보를 넘기면 demo 대신 그 값을 전달 필요.
             HorseRaceView(
+                match: .demo,
                 onNextGame: { viewModel.pop() },
                 onGoHome: { viewModel.popToRoot() }
             )

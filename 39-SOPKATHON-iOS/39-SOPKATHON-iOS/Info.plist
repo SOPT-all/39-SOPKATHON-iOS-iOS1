@@ -8,6 +8,8 @@
 	<string>$(MATCH_ID)</string>
 	<key>MEMBER_ID</key>
 	<string>$(MEMBER_ID)</string>
+	<key>TEAM_SLOT</key>
+	<string>$(TEAM_SLOT)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-Black.otf</string>

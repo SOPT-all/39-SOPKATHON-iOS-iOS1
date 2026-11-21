@@ -14,4 +14,6 @@ enum HorseRacePhase: Equatable {
     case finished(record: TimeInterval)
     /// 경기 완료가 확인되어 결과를 받은 상태.
     case completed(HorseRaceResult)
+    /// 경기가 시간 초과·취소·무효로 끝났거나 경기 정보가 없어 결과를 받을 수 없는 상태.
+    case aborted
 }
