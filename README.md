@@ -75,10 +75,11 @@
 | --- | --- | :---: |
 | 온보딩 | 학교·학년·반·번호·이름 입력 및 서버 등록 | 기획 |
 | 게임 참여 | 여러 방식의 게임 제공, 반 전체·게임별 정원 적용 | 기획 |
+| 주요 게임 | 음성으로 공 굴리기 · 소설 이어 쓰기 릴레이 · 사진 이어 찍기 | 논의 중 |
 | 문답 영상 릴레이 | 질문을 매개로 영상을 공유하며 반별 교류 | 기획 |
 | 반응 & 순위 | 기존 영상 릴레이에서 일정 기간 반응을 모아 순위 산정 | 기획 |
 
-추가 게임의 구체적인 내용과 결과 집계 방식은 확정 후 작성합니다.
+주요 게임은 논의 중인 후보이며, 구체적인 규칙과 결과 집계 방식은 확정 후 작성합니다.
 
 ### 기술 스택
 
@@ -88,9 +89,6 @@
 | UI | SwiftUI | 화면 구성 기반 |
 | State | Observation · MVVM | `@Observable` ViewModel, `@State` 소유 방식이 팀 설계 기준 |
 | Network | URLSession · async/await | `BaseService`·`EndPoint` 공통 통신 기반 |
-| Image | Kingfisher 8.x | SPM 의존성 추가 완료, 이미지 캐싱에 사용 예정 |
-| Camera | UIImagePickerController | 기존 영상 릴레이 촬영에 사용 예정 |
-| Video | AVKit · VideoPlayer | 기존 영상 릴레이 재생에 사용 예정 |
 | Resource | Pretendard · Assets | 공통 폰트·이미지 리소스 |
 
 상세 선택 이유와 추천·미정 항목은 [기술 스택 문서](docs/tech-stack.md)를 참고합니다.
