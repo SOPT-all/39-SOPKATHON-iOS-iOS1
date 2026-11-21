@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 
 /// Figma 디자인시스템의 Typography 스타일. 이름은 `역할/크기/굵기` 순서를 따름.
-enum AppFont: CaseIterable {
+enum AppFont {
 
     enum Weight: String {
         case thin = "Pretendard-Thin"
@@ -110,6 +110,7 @@ extension Font {
 extension View {
 
     /// 폰트와 Figma 행간을 함께 적용함. 사용 예: .appFont(.bodyLRegular)
+    /// Text에 직접 적용함. 여러 Text를 감싼 컨테이너에는 `.font(AppFont.xxx.font)` 사용.
     func appFont(_ style: AppFont) -> some View {
         font(style.font)
             .lineSpacing(style.lineSpacing)

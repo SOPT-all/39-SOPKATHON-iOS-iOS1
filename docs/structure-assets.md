@@ -48,6 +48,8 @@ Text("내용")
 
 - `AppFont`는 Figma 디자인시스템 Typography 16종이며 이름은 `역할/크기/굵기`를 따름. 예: `Body/L/Regular` → `.bodyLRegular`.
 - `.appFont(_:)`는 폰트와 Figma 행간을 함께 적용함. 행간이 필요 없으면 `.font(AppFont.bodyLRegular.font)` 사용함.
+- `.appFont(_:)`는 Text에 직접 적용함. 여러 Text를 감싼 컨테이너에는 `.font(AppFont.xxx.font)` 사용.
+  컨테이너에 붙이면 위아래 반행간 여백이 Text마다 생기지 않고 컨테이너 바깥에만 한 번 생김.
 - 디자인시스템에 없는 크기만 `.pretendard(_:size:)`로 직접 지정함.
 - 현재 폰트 확장은 고정 크기 방식임.
 - 공통 색상은 Assets의 `Color` 폴더에 Figma 이름(`grey-1` ~ `grey-10`)으로 둠. 사용 예: `.foregroundStyle(.grey10)`.
