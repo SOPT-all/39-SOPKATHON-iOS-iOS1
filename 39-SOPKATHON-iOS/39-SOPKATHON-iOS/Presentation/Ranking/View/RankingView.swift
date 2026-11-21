@@ -11,7 +11,7 @@ struct RankingView: View {
 
     @Environment(\.dismiss) private var dismiss
 
-    @State private var selectedScope: RankingScope = .school
+    @State private var selectedScope: RankingScope = .nationwide
 
     var body: some View {
         VStack(spacing: 0) {
@@ -31,7 +31,7 @@ struct RankingView: View {
                             RankingRow(item: item)
                         }
                     }
-                    .padding(.top, 49)
+                    .padding(.top, 26)
 
                     Color.clear
                         .frame(height: 160)
@@ -165,11 +165,12 @@ private struct RankingRow: View {
                     .foregroundStyle(.black)
 
                 HStack(spacing: 4) {
-                    Image(.rankingRankUp)
+                    Image(.rankingRankDown)
+                        .rotationEffect(.degrees(180))
                         .frame(width: 15, height: 15)
 
                     Text("\(item.change)")
-                        .foregroundStyle(.mainRed)
+                        .foregroundStyle(Color(hex: 0x1A4196))
                 }
             }
         }
@@ -184,7 +185,7 @@ private struct RankingRow: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(
             "\(item.rank)위 \(item.schoolName), \(item.score)점, "
-                + "순위 \(item.change)단계 상승"
+                + "순위 \(item.change)단계 하락"
         )
     }
 
@@ -192,17 +193,17 @@ private struct RankingRow: View {
 
 private enum RankingScope: CaseIterable, Identifiable {
 
+    case nationwide
     case school
-    case classroom
 
     var id: Self { self }
 
     var title: String {
         switch self {
+        case .nationwide:
+            "전국 학교 랭킹"
         case .school:
             "우리 학교 랭킹"
-        case .classroom:
-            "우리 학급 랭킹"
         }
     }
 
@@ -239,7 +240,7 @@ private enum RankingData {
     static let podiumItems = [
         PodiumRankingItem(
             rank: 2,
-            schoolName: "이등고등학교",
+            schoolName: "부디고등학교",
             score: 110,
             schoolLogo: .rankingSchoolLogoSecond,
             rankImage: .rankingRankSecond,
@@ -249,7 +250,7 @@ private enum RankingData {
         ),
         PodiumRankingItem(
             rank: 1,
-            schoolName: "일등고등학교",
+            schoolName: "솝트고등학교",
             score: 120,
             schoolLogo: .rankingSchoolLogoFirst,
             rankImage: .rankingRankFirst,
@@ -259,7 +260,7 @@ private enum RankingData {
         ),
         PodiumRankingItem(
             rank: 3,
-            schoolName: "삼등고등학교",
+            schoolName: "솝트중학교",
             score: 100,
             schoolLogo: .rankingSchoolLogoThird,
             rankImage: .rankingRankThird,
@@ -272,13 +273,13 @@ private enum RankingData {
     static let listItems = [
         RankingListItem(
             rank: 4,
-            schoolName: "일등고등학교",
+            schoolName: "사등고등학교",
             score: 80,
             change: 1
         ),
         RankingListItem(
             rank: 5,
-            schoolName: "일등고등학교",
+            schoolName: "오등중학교",
             score: 80,
             change: 1
         ),
@@ -296,7 +297,7 @@ private enum RankingData {
         ),
         RankingListItem(
             rank: 8,
-            schoolName: "일등고등학교",
+            schoolName: "팔등초등학교",
             score: 80,
             change: 1
         ),
@@ -308,10 +309,4 @@ private enum RankingData {
         )
     ]
 
-}
-
-#Preview {
-    NavigationStack {
-        RankingView()
-    }
 }
