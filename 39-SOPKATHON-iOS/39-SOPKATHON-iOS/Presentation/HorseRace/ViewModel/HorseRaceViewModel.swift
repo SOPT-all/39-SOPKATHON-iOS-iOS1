@@ -17,6 +17,7 @@ final class HorseRaceViewModel {
     private let runnerExitTapCount = 13
     // TODO: 서버 시작 신호 사용 여부 확정 후 카운트다운 대체 검토 필요.
     private let countdown: Duration = .seconds(3)
+    private let resultCheckInterval: Duration = .seconds(2)
 
     private(set) var phase: HorseRacePhase = .ready
     private(set) var tapCount = 0
@@ -40,12 +41,25 @@ final class HorseRaceViewModel {
         phase == .ready
     }
 
-    var buttonTitle: String {
+    /// 완주 후 경기 완료 여부를 확인하는 중인지 여부.
+    var isWaitingForResult: Bool {
+        if case .finished = phase { true } else { false }
+    }
+
+    /// 완주 이후(완료 확인 중·결과 표시) 화면을 어둡게 덮을지 여부.
+    var isGameOver: Bool {
         switch phase {
-        case .ready: "준비..."
-        case .running: "연타!!!"
-        case .finished: "완주!"
+        case .ready, .running: false
+        case .finished, .completed: true
         }
+    }
+
+    var result: HorseRaceResult? {
+        if case .completed(let result) = phase { result } else { nil }
+    }
+
+    var buttonTitle: String {
+        isReady ? "준비..." : "연타!!!"
     }
 
     /// 준비 단계에서 카운트다운이 끝나면 경기를 시작함. 대기 중 취소되면 시작하지 않음.
@@ -61,16 +75,51 @@ final class HorseRaceViewModel {
         phase = .running(startDate: .now)
     }
 
-    /// 진행 중에만 탭을 셈. 완주시킨 탭이면 완주 기록을, 그 외에는 nil을 반환함.
-    func tap(at date: Date = .now) -> TimeInterval? {
-        guard case .running(let startDate) = phase else { return nil }
+    /// 진행 중에만 탭을 셈. 필요한 탭 수를 채우면 완주 기록과 함께 완주 상태로 바꿈.
+    func tap(at date: Date = .now) {
+        guard case .running(let startDate) = phase else { return }
 
         tapCount += 1
-        guard tapCount >= requiredTapCount else { return nil }
+        guard tapCount >= requiredTapCount else { return }
 
-        let record = date.timeIntervalSince(startDate)
-        phase = .finished(record: record)
-        return record
+        phase = .finished(record: date.timeIntervalSince(startDate))
+    }
+
+    /// 완주 후 경기 완료가 확인될 때까지 일정 간격으로 확인함. 화면 이탈로 취소되면 멈춤.
+    func waitForResult() async {
+        while case .finished(let record) = phase {
+            do {
+                if let result = try await fetchResult(record: record) {
+                    phase = .completed(result)
+                    return
+                }
+            } catch is CancellationError {
+                return
+            } catch {
+                // 요청 실패도 미완료와 같게 보고 다음 간격에 다시 확인함.
+            }
+
+            do {
+                try await Task.sleep(for: resultCheckInterval)
+            } catch {
+                // 화면 이탈로 task가 취소된 경우라 확인을 멈춤.
+                return
+            }
+        }
+    }
+
+    // TODO: 서버 명세 확정 후 BaseService 호출로 교체 필요. 경기 미완료면 nil 반환.
+    // 지금은 내 기록을 우리 팀 평균으로 두고 나머지는 Figma 예시 값으로 바로 완료 처리함.
+    private func fetchResult(record: TimeInterval) async throws -> HorseRaceResult? {
+        let opponentTeamAverageRecord: TimeInterval = 13.37
+        let isWin = record < opponentTeamAverageRecord
+        return HorseRaceResult(
+            mySchool: "솝트고등학교 1학년 1반",
+            opponentSchool: "부디고등학교 1학년 1반",
+            myTeamAverageRecord: record,
+            opponentTeamAverageRecord: opponentTeamAverageRecord,
+            score: isWin ? 300 : nil
+        )
     }
 
 }
