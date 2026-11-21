@@ -17,10 +17,19 @@ final class HorseRaceViewModel {
     private let runnerExitTapCount = 13
     // TODO: 서버 시작 신호 사용 여부 확정 후 카운트다운 대체 검토 필요.
     private let countdown: Duration = .seconds(3)
-    private let resultCheckInterval: Duration = .seconds(2)
+    // 서버 명세의 경기 종료 상태 조회 간격과 같게 둠.
+    private let resultCheckInterval: Duration = .seconds(3)
+
+    private let match: HorseRaceMatch?
+    private let service: BaseService
 
     private(set) var phase: HorseRacePhase = .ready
     private(set) var tapCount = 0
+
+    init(match: HorseRaceMatch?, service: BaseService = .shared) {
+        self.match = match
+        self.service = service
+    }
 
     private var requiredTapCount: Int {
         trackTapCount + runnerExitTapCount
@@ -46,12 +55,16 @@ final class HorseRaceViewModel {
         if case .finished = phase { true } else { false }
     }
 
-    /// 완주 이후(완료 확인 중·결과 표시) 화면을 어둡게 덮을지 여부.
+    /// 완주 이후(완료 확인 중·결과 표시·비정상 종료) 화면을 어둡게 덮을지 여부.
     var isGameOver: Bool {
         switch phase {
         case .ready, .running: false
-        case .finished, .completed: true
+        case .finished, .completed, .aborted: true
         }
+    }
+
+    var isAborted: Bool {
+        phase == .aborted
     }
 
     var result: HorseRaceResult? {
@@ -85,18 +98,32 @@ final class HorseRaceViewModel {
         phase = .finished(record: date.timeIntervalSince(startDate))
     }
 
-    /// 완주 후 경기 완료가 확인될 때까지 일정 간격으로 확인함. 화면 이탈로 취소되면 멈춤.
+    /// 완주 기록을 제출한 뒤 경기 종료 상태를 일정 간격으로 확인해 결과나 비정상 종료로 바꿈.
+    /// 요청 실패는 다음 간격에 다시 시도하고, 화면 이탈로 취소되면 멈춤.
     func waitForResult() async {
-        while case .finished(let record) = phase {
+        guard case .finished(let record) = phase else { return }
+        guard let match else {
+            phase = .aborted
+            return
+        }
+
+        let elapsedMilliseconds = Int64((record * 1000).rounded())
+        var isRecordSubmitted = false
+        while isWaitingForResult {
             do {
-                if let result = try await fetchResult(record: record) {
-                    phase = .completed(result)
+                // 서버가 이미 제출한 기록은 바꾸지 않아 화면 재진입으로 다시 보내도 안전함.
+                if !isRecordSubmitted {
+                    try await submitRecord(elapsedMilliseconds, match: match)
+                    isRecordSubmitted = true
+                }
+                if let nextPhase = try await fetchPhaseAfterFinish(match: match) {
+                    phase = nextPhase
                     return
                 }
             } catch is CancellationError {
                 return
             } catch {
-                // 요청 실패도 미완료와 같게 보고 다음 간격에 다시 확인함.
+                // 제출·조회 실패는 경기 미완료와 같게 보고 다음 간격에 다시 시도함.
             }
 
             do {
@@ -108,19 +135,35 @@ final class HorseRaceViewModel {
         }
     }
 
-    // TODO: 서버 명세 확정 후 BaseService 호출로 교체 필요. 경기 미완료면 nil 반환.
-    // 지금은 내 기록을 우리 팀 평균으로 두고 나머지는 Figma 예시 값으로 바로 완료 처리함.
-    private func fetchResult(record: TimeInterval) async throws -> HorseRaceResult? {
-        let myTeamFinishTimeMilliseconds = Int64((record * 1000).rounded())
-        let opponentTeamFinishTimeMilliseconds: Int64 = 13_370
-        let isWin = myTeamFinishTimeMilliseconds < opponentTeamFinishTimeMilliseconds
-        return HorseRaceResult(
-            mySchool: "솝트고등학교 1학년 1반",
-            opponentSchool: "부디고등학교 1학년 1반",
-            myTeamFinishTimeMilliseconds: myTeamFinishTimeMilliseconds,
-            opponentTeamFinishTimeMilliseconds: opponentTeamFinishTimeMilliseconds,
-            score: isWin ? 300 : nil
+    private func submitRecord(_ elapsedMilliseconds: Int64, match: HorseRaceMatch) async throws {
+        let _: HorseRecordSubmitResponseDTO = try await service.request(
+            endPoint: .submitHorseRecord(matchID: match.matchID, memberID: match.memberID),
+            body: HorseRecordSubmitRequestDTO(elapsedMilliseconds: elapsedMilliseconds)
         )
+    }
+
+    /// 경기가 아직 진행 중이면 nil을 반환함.
+    private func fetchPhaseAfterFinish(match: HorseRaceMatch) async throws -> HorseRacePhase? {
+        let statusResponse: MatchStatusResponseDTO = try await service.request(
+            endPoint: .matchStatus(matchID: match.matchID, memberID: match.memberID)
+        )
+        switch statusResponse.status {
+        case .searching, .found, .inProgress:
+            return nil
+        case .timeout, .cancelled, .invalid:
+            return .aborted
+        case .finished:
+            let resultResponse: MatchResultResponseDTO = try await service.request(
+                endPoint: .matchResult(matchID: match.matchID, memberID: match.memberID)
+            )
+            // 팀 정보가 비어 있으면 결과 확정 전으로 보고 다음 간격에 다시 조회함.
+            guard
+                let result = HorseRaceResult(response: resultResponse, myTeamSlot: match.teamSlot)
+            else {
+                return nil
+            }
+            return .completed(result)
+        }
     }
 
 }

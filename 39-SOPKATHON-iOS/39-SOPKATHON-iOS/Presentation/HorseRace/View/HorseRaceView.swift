@@ -14,7 +14,18 @@ struct HorseRaceView: View {
     /// 결과 팝업의 "홈 화면으로 이동"을 누르면 호출함.
     let onGoHome: () -> Void
 
-    @State private var viewModel = HorseRaceViewModel()
+    @State private var viewModel: HorseRaceViewModel
+
+    /// - Parameter match: nil이면 완주 후 결과를 받을 수 없어 비정상 종료 알림을 띄움.
+    init(
+        match: HorseRaceMatch?,
+        onNextGame: @escaping () -> Void,
+        onGoHome: @escaping () -> Void
+    ) {
+        self.onNextGame = onNextGame
+        self.onGoHome = onGoHome
+        _viewModel = State(initialValue: HorseRaceViewModel(match: match))
+    }
 
     var body: some View {
         // 버튼은 안전 영역 기준으로 두고 배경만 화면 끝까지 그리기 위해 ZStack으로 감쌈.
@@ -52,6 +63,15 @@ struct HorseRaceView: View {
                     onGoHome: onGoHome
                 )
             }
+        }
+        .alert(
+            "경기 결과를 확인할 수 없어요",
+            // 확인 버튼이 화면을 닫으므로 알림을 닫을 때 상태를 되돌리지 않음.
+            isPresented: .constant(viewModel.isAborted)
+        ) {
+            Button("홈으로 이동", action: onGoHome)
+        } message: {
+            Text("경기가 정상적으로 끝나지 않았어요.")
         }
         .task(id: viewModel.isReady) {
             await viewModel.startAfterCountdown()
