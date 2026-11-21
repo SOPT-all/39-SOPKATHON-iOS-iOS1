@@ -1,6 +1,6 @@
 <div align="leading">
 
-# 반하나:  우리 반이 하나 되는 온라인 운동회
+# 반하나 Banana:  우리 반이 하나 되는 온라인 운동회
 
 <!-- 서비스명 확정 후 위 제목을 변경하고, 필요하면 여기에 로고 또는 배너를 추가해 주세요. -->
 <img width="500" alt="banner" src="https://github.com/user-attachments/assets/84c7b180-bb98-4cf5-8587-9d6c08121b84" />
