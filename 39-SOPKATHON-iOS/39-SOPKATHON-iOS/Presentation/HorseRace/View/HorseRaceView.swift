@@ -9,8 +9,10 @@ import SwiftUI
 
 struct HorseRaceView: View {
 
-    /// 완주 시 기록(초)을 한 번 전달함.
-    let onFinish: (TimeInterval) -> Void
+    /// 결과 팝업의 "다음 게임 이어가기"를 누르면 호출함.
+    let onNextGame: () -> Void
+    /// 결과 팝업의 "홈 화면으로 이동"을 누르면 호출함.
+    let onGoHome: () -> Void
 
     @State private var viewModel = HorseRaceViewModel()
 
@@ -37,17 +39,26 @@ struct HorseRaceView: View {
         }
         .overlay(alignment: .bottom) {
             // 준비·완주 중 탭은 ViewModel이 무시함. disabled로 막으면 버튼이 흐려져 디자인과 달라짐.
-            HorseRaceTapButton(title: viewModel.buttonTitle, action: tap)
-                .padding(.horizontal, 20)
+            HorseRaceTapButton(title: viewModel.buttonTitle) {
+                viewModel.tap()
+            }
+            .padding(.horizontal, 20)
+        }
+        .overlay {
+            if viewModel.isGameOver {
+                HorseRaceGameOver(
+                    result: viewModel.result,
+                    onNextGame: onNextGame,
+                    onGoHome: onGoHome
+                )
+            }
         }
         .task(id: viewModel.isReady) {
             await viewModel.startAfterCountdown()
         }
-    }
-
-    private func tap() {
-        guard let record = viewModel.tap() else { return }
-        onFinish(record)
+        .task(id: viewModel.isWaitingForResult) {
+            await viewModel.waitForResult()
+        }
     }
 
 }
