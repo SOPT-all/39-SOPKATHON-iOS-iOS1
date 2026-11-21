@@ -9,12 +9,12 @@ import AVFoundation
 
 final class SoundLevelMeter {
 
-    private let engine = AVAudioEngine()
+    private var engine = AVAudioEngine()
     private let session = AVAudioSession.sharedInstance()
     private var measurementID: UUID?
     private var hasInstalledTap = false
     private var isSessionActive = false
-    private var interruptionObserver: NSObjectProtocol?
+    private var audioObservers: [NSObjectProtocol] = []
     private var onUpdate: (@MainActor (Result<Double, Error>) -> Void)?
 
     private(set) var isMeasuring = false
@@ -35,6 +35,7 @@ final class SoundLevelMeter {
             try session.setActive(true)
             isSessionActive = true
 
+            engine = AVAudioEngine()
             let input = engine.inputNode
             let format = input.outputFormat(forBus: 0)
             guard format.sampleRate > 0, format.channelCount > 0 else {
@@ -42,7 +43,12 @@ final class SoundLevelMeter {
             }
 
             self.onUpdate = onUpdate
-            input.installTap(onBus: 0, bufferSize: 1024, format: format) { @Sendable [weak self] buffer,
+            input.installTap(
+                onBus: 0,
+                bufferSize: 1024,
+                format: format
+            ) { @Sendable [weak self]
+                buffer,
                 _ in
                 let score = Self.calculateScore(buffer: buffer)
                 Task { @MainActor [weak self] in
@@ -56,7 +62,7 @@ final class SoundLevelMeter {
             engine.prepare()
             try engine.start()
             isMeasuring = true
-            observeInterruption(measurementID: measurementID)
+            observeAudioChanges(measurementID: measurementID)
         } catch {
             if self.measurementID == measurementID {
                 try stop()
@@ -70,10 +76,10 @@ final class SoundLevelMeter {
         isMeasuring = false
         onUpdate = nil
 
-        if let interruptionObserver {
-            NotificationCenter.default.removeObserver(interruptionObserver)
-            self.interruptionObserver = nil
+        for observer in audioObservers {
+            NotificationCenter.default.removeObserver(observer)
         }
+        audioObservers.removeAll()
         engine.stop()
         if hasInstalledTap {
             engine.inputNode.removeTap(onBus: 0)
@@ -85,8 +91,8 @@ final class SoundLevelMeter {
         }
     }
 
-    private func observeInterruption(measurementID: UUID) {
-        interruptionObserver = NotificationCenter.default.addObserver(
+    private func observeAudioChanges(measurementID: UUID) {
+        let interruptionObserver = NotificationCenter.default.addObserver(
             forName: AVAudioSession.interruptionNotification,
             object: session,
             queue: nil
@@ -95,15 +101,54 @@ final class SoundLevelMeter {
                   AVAudioSession.InterruptionType(rawValue: value) == .began else { return }
 
             Task { @MainActor [weak self] in
-                guard let self, self.measurementID == measurementID else { return }
-                let onUpdate = self.onUpdate
-                do {
-                    try self.stop()
-                    onUpdate?(.failure(SoundLevelMeterError.interrupted))
-                } catch {
-                    onUpdate?(.failure(error))
-                }
+                self?.handleAudioFailure(.interrupted, measurementID: measurementID)
             }
+        }
+        audioObservers.append(interruptionObserver)
+        observeFailureNotification(
+            .AVAudioEngineConfigurationChange,
+            object: engine,
+            error: .inputChanged,
+            measurementID: measurementID
+        )
+        observeFailureNotification(
+            AVAudioSession.mediaServicesWereResetNotification,
+            object: session,
+            error: .mediaServicesReset,
+            measurementID: measurementID
+        )
+    }
+
+    private func observeFailureNotification(
+        _ name: Notification.Name,
+        object: AnyObject,
+        error: SoundLevelMeterError,
+        measurementID: UUID
+    ) {
+        let observer = NotificationCenter.default.addObserver(
+            forName: name,
+            object: object,
+            queue: nil
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.handleAudioFailure(error, measurementID: measurementID)
+            }
+        }
+        audioObservers.append(observer)
+    }
+
+    private func handleAudioFailure(
+        _ error: SoundLevelMeterError,
+        measurementID: UUID
+    ) {
+        guard self.measurementID == measurementID else { return }
+        let onUpdate = onUpdate
+        defer { engine = AVAudioEngine() }
+        do {
+            try stop()
+            onUpdate?(.failure(error))
+        } catch {
+            onUpdate?(.failure(error))
         }
     }
 
@@ -131,6 +176,8 @@ enum SoundLevelMeterError: Error {
     case permissionDenied
     case inputUnavailable
     case interrupted
+    case inputChanged
+    case mediaServicesReset
 
 }
 
@@ -141,11 +188,15 @@ extension SoundLevelMeterError: LocalizedError {
         case .alreadyStarted:
             return "이미 음량 측정을 시작했어요."
         case .permissionDenied:
-            return "음량을 측정하려면 설정에서 마이크 접근을 허용해 주세요."
+            return "마이크 접근 권한이 필요해요. 설정에서 허용해 주세요."
         case .inputUnavailable:
             return "마이크 입력을 사용할 수 없어요."
         case .interrupted:
             return "마이크 사용이 중단됐어요."
+        case .inputChanged:
+            return "오디오 장치가 변경됐어요. 다시 측정해 주세요."
+        case .mediaServicesReset:
+            return "오디오 서비스가 재시작됐어요. 다시 측정해 주세요."
         }
     }
 

@@ -19,10 +19,12 @@ final class SoundTugViewModel {
         case failed
     }
 
+    private static let measurementSeconds = 10
+
     private(set) var state = State.ready
     private(set) var currentScore = 0.0
     private(set) var highestScore = 0.0
-    private(set) var remainingSeconds = 10
+    private(set) var remainingSeconds = SoundTugViewModel.measurementSeconds
     private(set) var errorMessage: String?
 
     private let meter = SoundLevelMeter()
@@ -41,7 +43,7 @@ final class SoundTugViewModel {
         highestScore = 0
         lastScoreUpdate = nil
         isAboveNoiseFloor = false
-        remainingSeconds = 10
+        remainingSeconds = Self.measurementSeconds
         errorMessage = nil
         state = .preparing
         let runID = UUID()
@@ -73,7 +75,7 @@ final class SoundTugViewModel {
             state = .measuring
 
             let clock = ContinuousClock()
-            let deadline = clock.now.advanced(by: .seconds(10))
+            let deadline = clock.now.advanced(by: .seconds(Self.measurementSeconds))
             while clock.now < deadline {
                 let duration = clock.now.duration(to: deadline)
                 let seconds = Double(duration.components.seconds)

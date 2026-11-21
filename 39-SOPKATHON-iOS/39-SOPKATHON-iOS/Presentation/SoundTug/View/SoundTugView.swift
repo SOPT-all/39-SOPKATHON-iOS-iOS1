@@ -53,8 +53,8 @@ struct SoundTugView: View {
                     }
                     if let errorMessage = viewModel.errorMessage {
                         Text(errorMessage)
-                            .font(.pretendard(size: 13))
-                            .foregroundStyle(.red)
+                            .appFont(.bodyMRegular)
+                            .foregroundStyle(.mainRed)
                             .multilineTextAlignment(.center)
                             .padding(.bottom, 12)
                     }
@@ -83,10 +83,11 @@ struct SoundTugView: View {
         VStack(spacing: 10) {
             HStack {
                 Text("개인 기록")
+                    .appFont(.bodyLSemiBold)
                 Spacer()
                 Text("이번 측정 최고 \(viewModel.highestScore, specifier: "%.1f")점")
+                    .appFont(.bodyLSemiBold)
             }
-            .font(.pretendard(.semiBold, size: 16))
             .foregroundStyle(.black)
 
             GeometryReader { geometry in
@@ -99,7 +100,7 @@ struct SoundTugView: View {
                                 * CGFloat(viewModel.currentScore / 100)
                         )
                     Text("현재 \(viewModel.currentScore, specifier: "%.1f")점")
-                        .font(.pretendard(.semiBold, size: 16))
+                        .appFont(.bodyLSemiBold)
                         .foregroundStyle(Color(white: 84 / 255))
                         .padding(.horizontal, 14)
                 }
@@ -124,7 +125,7 @@ struct SoundTugView: View {
             }
         } label: {
             Text(buttonTitle)
-                .font(.pretendard(.semiBold, size: 16))
+                .appFont(.bodyLSemiBold)
                 .foregroundStyle(.white)
                 .monospacedDigit()
                 .frame(maxWidth: .infinity)
@@ -133,7 +134,8 @@ struct SoundTugView: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(
-            viewModel.state == .ready ? "10초 음량 측정 시작" : buttonTitle
+            viewModel.state == .ready
+                ? "\(viewModel.remainingSeconds)초 음량 측정 시작" : buttonTitle
         )
     }
 
