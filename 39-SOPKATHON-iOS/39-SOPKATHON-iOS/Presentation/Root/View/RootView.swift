@@ -38,13 +38,15 @@ struct RootView: View {
 
     @ViewBuilder
     private func gameDestination(for game: Game) -> some View {
-        // TODO: 결과 뷰 추가 시 completedGameResult로 표시하고 startNextGame/popToRoot 연결 필요.
         switch game {
         case .horseRace:
-            HorseRaceView { seconds in
-                viewModel.finishGame(.horseRace(seconds: seconds))
-            }
+            // 결과 팝업은 경마 화면이 직접 띄우고 버튼 신호만 받음. 다음 게임은 게임방에서 종목을 다시 고름.
+            HorseRaceView(
+                onNextGame: { viewModel.pop() },
+                onGoHome: { viewModel.popToRoot() }
+            )
         case .tugOfWar:
+            // TODO: 결과 뷰 추가 시 completedGameResult로 표시하고 startNextGame/popToRoot 연결 필요.
             SoundTugView { score in
                 viewModel.finishGame(.tugOfWar(score: score))
             }
