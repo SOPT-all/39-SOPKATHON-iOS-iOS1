@@ -16,7 +16,12 @@
 | 영역 | 기술·방식 | 비고 |
 | --- | --- | --- |
 | 기반 | SwiftUI, 최소 iOS 17.0, Swift 5 모드 | 기존 프로젝트 설정 |
-| 촬영 | `UIImagePickerController` (`UIViewControllerRepresentable`로 래핑) | `videoMaximumDuration` 기본값이 600초라 직접 제한 필요 |
+| 촬영 | `UIImagePickerController` 래퍼 `CameraPicker` (`Presentation/Common/Component`) | 카메라로 사진·영상 둘 다 촬영. 띄우기 전 `CameraPicker.isAvailable` 확인 필요(시뮬레이터는 카메라 없음) |
+| 촬영 범위 | 갤러리 업로드·사진 앱 저장 사용하지 않음 | 사진 앨범 권한 문구 불필요 |
+| 영상 화질·길이 | `.typeHigh`, 길이 제한 없음 | 기본 600초 제한을 풀기 위해 `videoMaximumDuration`을 1시간으로 설정 |
+| 업로드 전 압축 | `MediaCompressor` (`Data/Media`) | 사진: 긴 변 1920px, JPEG 0.8. 영상: `AVAssetExportSession` 720p mp4. iOS 18 이상은 `export(to:as:)`, iOS 17은 `export()` |
+| 촬영 전 권한 확인 | `CameraAuthorization.requestAccess()` (`Data/Media`) | `false`면 설정 앱 이동 안내 필요. 마이크는 요청만 하고 결과에 반영하지 않음 |
+| 재생 소리 | 앱 시작 시 `AVAudioSession` 카테고리 `.playback` 설정 | 무음 스위치를 켜도 영상 소리가 남 |
 | 촬영 중 질문 표시 | `cameraOverlayView` + `UIHostingController` | `.camera` 소스에서만 사용 가능. 촬영 버튼 터치를 막지 않게 `isUserInteractionEnabled = false` |
 | 재생 | AVKit `VideoPlayer(player:videoOverlay:)` | 오버레이로 질문 표시 |
 | 릴레이 넘겨 보기 | `TabView` + `.tabViewStyle(.page)` | 화면에 보이는 영상만 재생 |
@@ -32,7 +37,6 @@
 
 | 영역 | 추천 | 이유 |
 | --- | --- | --- |
-| 영상 압축 | `AVAssetExportSession`의 async `export(to:as:)` | `exportAsynchronously`는 iOS 18에서 deprecated. iOS 17 사용 가능 여부는 빌드로 확인 필요 |
 | 새 영상 반영 | 화면 진입·당겨서 새로고침 시 재조회 | 실시간 연결보다 작업량이 적음 |
 | 영상 썸네일 | 서버가 썸네일 URL 제공 | 이미지 라이브러리의 영상 첫 장면 추출 기능은 확인되지 않음 |
 | 공유 | `ShareLink`로 시작 | 카카오톡 공유는 시간이 남을 때 추가 |
@@ -53,8 +57,8 @@
 | 항목 | 영향 |
 | --- | --- |
 | 업로드 방식 (multipart 또는 presigned URL) | 앱 업로드 코드. presigned URL이면 multipart 불필요 |
-| 영상 최대 길이·용량, 압축 화질 | 업로드 시간, 서버 용량 |
-| 사진 허용, 갤러리 업로드 허용 여부 | 촬영 화면 구성 |
+| 서버 업로드 최대 용량 | 영상 길이 제한이 없어 긴 영상은 업로드 실패 가능 |
+| 서버 응답의 사진·영상 구분 필드 | 릴레이 화면에서 `KFImage`와 `VideoPlayer` 중 무엇으로 표시할지 판단 |
 | 반별 릴레이 참여 단위·순서·다음 반 연결 규칙, 인원 제한 | 서버 `canJoin` 조건, 릴레이 화면 구성 |
 | 릴레이 진입 경로 (앱 내 목록, 공유 링크, 카카오) | 화면 구성, Kakao SDK 도입 여부 |
 | 서비스 질문 제공 방식 (오늘의 질문, 추천 목록) | 질문 선택 화면, API |
@@ -74,7 +78,8 @@
 
 - 시뮬레이터에는 카메라가 없음. 촬영 기능은 실기기로만 확인 가능함.
 - Kingfisher·Kakao SDK·Firebase는 Xcode 26 이상 필요. 팀원 Xcode 버전 확인 필요.
-- 서버 팀과 먼저 맞출 것: 업로드 방식, `canJoin`, 없는 사용자 응답 형식, 썸네일 URL, `userID` 타입.
+- 서버 팀과 먼저 맞출 것: 업로드 방식, 업로드 최대 용량, 사진·영상 구분 필드, `canJoin`, 없는 사용자 응답 형식,
+  썸네일 URL, `userID` 타입.
 
 ## 출처
 

@@ -27,6 +27,7 @@
 | 폴더·파일 추가, 화면 UI·Figma 구현, 폰트·색상·이미지 사용 | [폴더 구조·Figma·리소스](docs/structure-assets.md) |
 | API 연동·네트워크 코드 수정, BASE_URL·xcconfig 설정 | [네트워크](docs/network.md) |
 | 라이브러리 도입, 촬영·업로드·재생·릴레이 기능 구현 | [기술 스택](docs/tech-stack.md) |
+| 촬영 화면 구현, 카메라·압축·권한 공통 부품 사용·수정 | [촬영·압축 공통 부품](docs/media.md) |
 | 커밋·브랜치·PR·머지 | [Git 컨벤션](docs/git.md) |
 | 다른 사람이 만든 화면과 연결하거나 그 코드를 재사용·수정 | `docs/features/`의 해당 화면 문서 |
 | 코드 리뷰 요청 | [코드 리뷰 기준](docs/review.md) |

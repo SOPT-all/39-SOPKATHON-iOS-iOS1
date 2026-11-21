@@ -8,6 +8,7 @@
 39-SOPKATHON-iOS/39-SOPKATHON-iOS/
 ├── Application/                 # 앱 진입점
 ├── Data/
+│   ├── Media/                   # 촬영 결과 압축·카메라 권한 확인
 │   └── Network/
 │       ├── Base/                # 공통 요청·응답·에러·로그
 │       └── DTO/                 # API 요청·응답 DTO
