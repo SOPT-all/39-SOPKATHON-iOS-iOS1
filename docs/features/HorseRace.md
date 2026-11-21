@@ -17,8 +17,8 @@
 
 ## 주요 결정
 - 결과 팝업은 소리 줄다리기와 디자인이 같아 공통 `GameResultPopup`(배너 `GameResultBanner`)으로 둠.
-  게임 이름·학교·기록·점수·승패를 값으로 받고, 에셋은 `Common/img_result_*`임.
-- 승패는 화면이 정해 넘김. 경마는 두 팀 평균 기록 비교로 계산함(`HorseRaceResult.isWin`).
+  기록은 서버 필드 단위대로 `GameResultPopup.Record`(완주 밀리초·최대 데시벨)로 받음. 에셋은 `Common/img_result_*`.
+- 승패는 화면이 정해 넘김. 경마는 완주 시간이 짧은 팀이 승리함(`HorseRaceResult.isWin`).
 - 완료 확인 실패도 미완료처럼 재확인함.
 - 배너 도형은 게임방 `img_vs_shape_back`·`img_vs_shape_front`를 재사용하고 색은 template으로 바꿈.
 - 공통 `SchoolTag`에 패배 쪽 태그용 `.dimmed` 스타일을 추가함.
