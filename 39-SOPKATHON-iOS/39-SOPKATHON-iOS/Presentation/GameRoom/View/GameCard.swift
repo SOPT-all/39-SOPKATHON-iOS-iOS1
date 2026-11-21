@@ -8,10 +8,12 @@
 import SwiftUI
 
 /// 게임방의 종목 선택 카드. 사용 예: GameCard(game: .horseRace, isSelected: true) { }
+/// `isEnabled`가 false면 탭만 막고, 버튼은 Figma 회색 상태 그대로 보여줌.
 struct GameCard: View {
 
     let game: Game
     let isSelected: Bool
+    var isEnabled = true
     let onSelect: () -> Void
 
     var body: some View {
@@ -108,6 +110,8 @@ private extension GameCard {
                     .clipShape(RoundedRectangle(cornerRadius: 4))
             }
             .buttonStyle(.plain)
+            // .disabled는 버튼을 반투명하게 흐려 배경이 비쳐 보이므로 탭만 막음.
+            .allowsHitTesting(isEnabled)
             .padding(.top, 4)
         }
         .padding(.horizontal, 11)

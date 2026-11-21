@@ -54,10 +54,13 @@ private extension GameRoomView {
     var gameList: some View {
         VStack(spacing: 27) {
             ForEach(Game.allCases, id: \.self) { game in
-                GameCard(game: game, isSelected: viewModel.selectedGame == game) {
+                GameCard(
+                    game: game,
+                    isSelected: viewModel.selectedGame == game,
+                    isEnabled: viewModel.isAllReady
+                ) {
                     viewModel.select(game)
                 }
-                .disabled(!viewModel.isAllReady)
             }
         }
     }
