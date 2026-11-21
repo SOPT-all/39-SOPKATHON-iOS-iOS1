@@ -24,12 +24,13 @@
 | 사용자 식별 | 온보딩 후 서버가 발급한 `userID`를 `@AppStorage`에 저장 | 인증 토큰 없음 |
 | 재설치 | 새 사용자로 시작 | `UserDefaults`는 앱 삭제 시 지워짐. 이전 기록과 연결되지 않음 |
 | 없는 사용자 응답 | `userID` 삭제 후 온보딩으로 이동 | 서버 DB 초기화 대비. 응답 코드는 서버와 협의 |
+| 이미지 캐싱 | Kingfisher 8.x (`KFImage`), SPM으로 추가함 | iOS 17의 `AsyncImage`는 캐시가 문서화되지 않음(iOS 27부터 명시). 메모리·디스크 캐시와 다운샘플링 제공 |
+| 권한 문구 | `Info.plist`의 `NSCameraUsageDescription`, `NSMicrophoneUsageDescription` | 문구 수정 시 `Info.plist`에서 변경 |
 
 ## 추천 (팀 합의 후 확정)
 
 | 영역 | 추천 | 이유 |
 | --- | --- | --- |
-| 이미지 캐싱 | Kingfisher 8.x (`KFImage`) | iOS 17의 `AsyncImage`는 캐시가 문서화되지 않음(iOS 27부터 명시). 메모리·디스크 캐시와 다운샘플링 제공 |
 | 영상 압축 | `AVAssetExportSession`의 async `export(to:as:)` | `exportAsynchronously`는 iOS 18에서 deprecated. iOS 17 사용 가능 여부는 빌드로 확인 필요 |
 | 새 영상 반영 | 화면 진입·당겨서 새로고침 시 재조회 | 실시간 연결보다 작업량이 적음 |
 | 영상 썸네일 | 서버가 썸네일 URL 제공 | 이미지 라이브러리의 영상 첫 장면 추출 기능은 확인되지 않음 |
@@ -72,7 +73,6 @@
 
 - 시뮬레이터에는 카메라가 없음. 촬영 기능은 실기기로만 확인 가능함.
 - Kingfisher·Kakao SDK·Firebase는 Xcode 26 이상 필요. 팀원 Xcode 버전 확인 필요.
-- 권한 문구: `NSCameraUsageDescription`, `NSMicrophoneUsageDescription`.
 - 서버 팀과 먼저 맞출 것: 업로드 방식, `canJoin`, 없는 사용자 응답 형식, 썸네일 URL, `userID` 타입.
 
 ## 출처
