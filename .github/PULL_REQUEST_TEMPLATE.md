@@ -23,11 +23,5 @@
 
 
 
-## 📷 Screenshots  
-| 기능/화면 | iPhone 13 mini | iPhone 18 Pro |
-|:--------:|:--------------:|:--------------:|
-| 기능 | <video src="" width="250"/> | <video src="" width="250"/> |
-
-
 ## 💬 To Reviewers  
 <!-- 리뷰어들에게 하고 싶은 말 -->
