@@ -25,8 +25,10 @@ struct HorseRaceGameOver: View {
                     mySchool: result.mySchool,
                     opponentSchool: result.opponentSchool,
                     isWin: result.isWin,
-                    myTeamAverageRecord: result.myTeamAverageRecord,
-                    opponentTeamAverageRecord: result.opponentTeamAverageRecord,
+                    myTeamRecord: .finishTime(milliseconds: result.myTeamFinishTimeMilliseconds),
+                    opponentTeamRecord: .finishTime(
+                        milliseconds: result.opponentTeamFinishTimeMilliseconds
+                    ),
                     score: result.score,
                     onNextGame: onNextGame,
                     onGoHome: onGoHome

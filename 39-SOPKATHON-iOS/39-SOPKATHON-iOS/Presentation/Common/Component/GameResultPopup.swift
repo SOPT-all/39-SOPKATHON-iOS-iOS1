@@ -8,15 +8,23 @@
 import SwiftUI
 
 /// 경기 완료 후 보여주는 승패 배너와 결과 카드. 승패 판정은 호출하는 화면이 정함.
-/// 사용 예: GameResultPopup(gameTitle: Game.horseRace.title, mySchool: "솝트고등학교 1학년 1반", ...)
+/// 사용 예: GameResultPopup(..., myTeamRecord: .finishTime(milliseconds: 12500), ...)
 struct GameResultPopup: View {
+
+    /// 팀 기록. 서버 응답 필드의 값과 단위를 그대로 받음.
+    enum Record {
+        /// 경마 `totalFinishTimeMilliseconds`. "12.50초"로 표시함.
+        case finishTime(milliseconds: Int64)
+        /// 소리 줄다리기 `totalMaxDecibel`. "85.3dB"로 표시함.
+        case maxDecibel(Double)
+    }
 
     let gameTitle: String
     let mySchool: String
     let opponentSchool: String
     let isWin: Bool
-    let myTeamAverageRecord: TimeInterval
-    let opponentTeamAverageRecord: TimeInterval
+    let myTeamRecord: Record
+    let opponentTeamRecord: Record
     /// 점수가 없으면 nil이며 "-"로 표시함.
     let score: Int?
     let onNextGame: () -> Void
@@ -76,8 +84,8 @@ private extension GameResultPopup {
     var records: some View {
         VStack(spacing: 8) {
             recordRow(title: "게임", value: gameTitle, isEmphasized: true)
-            recordRow(title: "우리 팀 평균 기록", value: recordText(myTeamAverageRecord))
-            recordRow(title: "상대 팀 평균 기록", value: recordText(opponentTeamAverageRecord))
+            recordRow(title: "우리 팀 평균 기록", value: recordText(myTeamRecord))
+            recordRow(title: "상대 팀 평균 기록", value: recordText(opponentTeamRecord))
             recordRow(title: "획득 점수", value: score.map { "\($0)점" } ?? "-")
         }
         .foregroundStyle(Palette.recordText)
@@ -95,8 +103,13 @@ private extension GameResultPopup {
         .frame(height: 18)
     }
 
-    func recordText(_ record: TimeInterval) -> String {
-        String(format: "%.2f초", record)
+    func recordText(_ record: Record) -> String {
+        switch record {
+        case .finishTime(let milliseconds):
+            String(format: "%.2f초", Double(milliseconds) / 1000)
+        case .maxDecibel(let decibel):
+            String(format: "%.1fdB", decibel)
+        }
     }
 
     /// Figma 결과 카드 색상. 디자인시스템 토큰에 없는 값임.

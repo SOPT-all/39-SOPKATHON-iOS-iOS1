@@ -111,13 +111,14 @@ final class HorseRaceViewModel {
     // TODO: 서버 명세 확정 후 BaseService 호출로 교체 필요. 경기 미완료면 nil 반환.
     // 지금은 내 기록을 우리 팀 평균으로 두고 나머지는 Figma 예시 값으로 바로 완료 처리함.
     private func fetchResult(record: TimeInterval) async throws -> HorseRaceResult? {
-        let opponentTeamAverageRecord: TimeInterval = 13.37
-        let isWin = record < opponentTeamAverageRecord
+        let myTeamFinishTimeMilliseconds = Int64((record * 1000).rounded())
+        let opponentTeamFinishTimeMilliseconds: Int64 = 13_370
+        let isWin = myTeamFinishTimeMilliseconds < opponentTeamFinishTimeMilliseconds
         return HorseRaceResult(
             mySchool: "솝트고등학교 1학년 1반",
             opponentSchool: "부디고등학교 1학년 1반",
-            myTeamAverageRecord: record,
-            opponentTeamAverageRecord: opponentTeamAverageRecord,
+            myTeamFinishTimeMilliseconds: myTeamFinishTimeMilliseconds,
+            opponentTeamFinishTimeMilliseconds: opponentTeamFinishTimeMilliseconds,
             score: isWin ? 300 : nil
         )
     }
