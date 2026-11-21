@@ -7,211 +7,39 @@
 
 import SwiftUI
 
+import Lottie
+
+/// 앱 시작 화면. `splash-intro` Lottie(375x812, 3초)를 한 번 재생함.
+/// 러너가 제목을 지나가며 글자가 하얘지고, 흰 화면에 banana 로고가 나타나는 흐름이 모두 들어 있음.
 struct SplashView: View {
 
+    /// 재생이 끝나면 호출함.
+    let onFinish: () -> Void
+
+    /// Lottie 재생 시간(3초)보다 조금 길게 둔 대비 시간.
+    private let fallbackDuration: Duration = .seconds(3.5)
+
     var body: some View {
-        GeometryReader { geometry in
-            let widthScale = geometry.size.width / SplashLayout.canvasWidth
-            let heightScale = geometry.size.height / SplashLayout.canvasHeight
-
-            ZStack {
-                SplashTrackBackground()
-                    .frame(
-                        width: SplashLayout.canvasWidth,
-                        height: SplashLayout.canvasHeight
-                    )
-                    .scaleEffect(max(widthScale, heightScale))
-
-                SplashArtwork()
-                    .scaleEffect(min(widthScale, heightScale))
+        LottieView(animation: .named("splash-intro"))
+            .playing(loopMode: .playOnce)
+            .animationDidFinish { _ in onFinish() }
+            .resizable()
+            // 기기 비율이 375x812와 달라도 빈 여백이 생기지 않게 화면을 채움.
+            .configure(\.contentMode, to: .scaleAspectFill)
+            .ignoresSafeArea()
+            .background(Color.white.ignoresSafeArea())
+            .accessibilityElement()
+            .accessibilityLabel("우리 반이 하나가 되는 온라인 운동회, banana")
+            .task {
+                // Lottie 완료 알림이 오지 않는 경우(리소스 로드 실패 등)에도 홈으로 넘어가도록 대비함.
+                do {
+                    try await Task.sleep(for: fallbackDuration)
+                } catch {
+                    // 화면이 사라져 취소된 경우라 전환하지 않음.
+                    return
+                }
+                onFinish()
             }
-            .position(
-                x: geometry.size.width / 2,
-                y: geometry.size.height / 2
-            )
-        }
-        .background(SplashLayout.backgroundColor)
-        .ignoresSafeArea()
     }
-
-}
-
-private struct SplashArtwork: View {
-
-    var body: some View {
-        ZStack(alignment: .topLeading) {
-            Image(.splashTitle)
-                .resizable()
-                .frame(width: 293.32, height: 195.75)
-                .position(x: 183.48, y: 317.69)
-                .accessibilityLabel("우리 반이 하나가 되는 온라인 운동회")
-
-            Image(.splashRunnerShadow)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 227, height: 259)
-                .position(x: 163.5, y: 670.5)
-                .accessibilityHidden(true)
-
-            Image(.splashRunner)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 48, height: 57)
-                .position(x: 279.17, y: 612.55)
-                .accessibilityHidden(true)
-        }
-        .frame(
-            width: SplashLayout.canvasWidth,
-            height: SplashLayout.canvasHeight
-        )
-        .clipped()
-    }
-
-}
-
-private struct SplashTrackBackground: View {
-
-    private let curvePoints: [[CGPoint]] = [
-        [
-            CGPoint(x: -13, y: 341), CGPoint(x: 65, y: 394),
-            CGPoint(x: 127, y: 425), CGPoint(x: 189, y: 452),
-            CGPoint(x: 251, y: 474), CGPoint(x: 313, y: 489),
-            CGPoint(x: 387, y: 502)
-        ],
-        [
-            CGPoint(x: -13, y: 262), CGPoint(x: 65, y: 322),
-            CGPoint(x: 127, y: 358), CGPoint(x: 189, y: 386),
-            CGPoint(x: 251, y: 409), CGPoint(x: 313, y: 426),
-            CGPoint(x: 387, y: 439)
-        ],
-        [
-            CGPoint(x: -13, y: 179), CGPoint(x: 65, y: 247),
-            CGPoint(x: 127, y: 287), CGPoint(x: 189, y: 319),
-            CGPoint(x: 251, y: 343), CGPoint(x: 313, y: 362),
-            CGPoint(x: 387, y: 376)
-        ],
-        [
-            CGPoint(x: -13, y: 89), CGPoint(x: 65, y: 169),
-            CGPoint(x: 127, y: 214), CGPoint(x: 189, y: 250),
-            CGPoint(x: 251, y: 277), CGPoint(x: 313, y: 298),
-            CGPoint(x: 387, y: 313)
-        ],
-        [
-            CGPoint(x: -13, y: -13), CGPoint(x: 65, y: 85),
-            CGPoint(x: 127, y: 138), CGPoint(x: 189, y: 179),
-            CGPoint(x: 251, y: 210), CGPoint(x: 313, y: 233),
-            CGPoint(x: 387, y: 250)
-        ],
-        [
-            CGPoint(x: -13, y: -145), CGPoint(x: 65, y: -13),
-            CGPoint(x: 127, y: 58), CGPoint(x: 189, y: 106),
-            CGPoint(x: 251, y: 142), CGPoint(x: 313, y: 168),
-            CGPoint(x: 387, y: 187)
-        ],
-        [
-            CGPoint(x: -13, y: -330), CGPoint(x: 65, y: -121),
-            CGPoint(x: 127, y: -30), CGPoint(x: 189, y: 29),
-            CGPoint(x: 251, y: 72), CGPoint(x: 313, y: 101),
-            CGPoint(x: 387, y: 124)
-        ]
-    ]
-
-    var body: some View {
-        Canvas { context, size in
-            context.fill(
-                Path(CGRect(origin: .zero, size: size)),
-                with: .color(SplashLayout.backgroundColor)
-            )
-
-            drawLaneLines(in: &context, height: size.height)
-            drawTrackCurves(in: &context)
-        }
-    }
-
-    private func drawLaneLines(
-        in context: inout GraphicsContext,
-        height: CGFloat
-    ) {
-        var path = Path()
-
-        for index in 0..<SplashLayout.laneCount {
-            let x = SplashLayout.firstLaneX + (CGFloat(index) * SplashLayout.laneSpacing)
-            path.move(to: CGPoint(x: x, y: 0))
-            path.addLine(to: CGPoint(x: x, y: height))
-        }
-
-        context.stroke(
-            path,
-            with: .color(SplashLayout.laneLineColor),
-            lineWidth: SplashLayout.trackLineWidth
-        )
-    }
-
-    private func drawTrackCurves(in context: inout GraphicsContext) {
-        for points in curvePoints {
-            context.stroke(
-                makeSmoothPath(points),
-                with: .color(SplashLayout.curveLineColor),
-                lineWidth: SplashLayout.trackLineWidth
-            )
-        }
-    }
-
-    private func makeSmoothPath(_ points: [CGPoint]) -> Path {
-        var path = Path()
-        guard let firstPoint = points.first else { return path }
-
-        path.move(to: firstPoint)
-
-        for index in 0..<(points.count - 1) {
-            let previous = points[max(index - 1, 0)]
-            let current = points[index]
-            let next = points[index + 1]
-            let following = points[min(index + 2, points.count - 1)]
-            let firstControl = CGPoint(
-                x: current.x + ((next.x - previous.x) / 6),
-                y: current.y + ((next.y - previous.y) / 6)
-            )
-            let secondControl = CGPoint(
-                x: next.x - ((following.x - current.x) / 6),
-                y: next.y - ((following.y - current.y) / 6)
-            )
-
-            path.addCurve(
-                to: next,
-                control1: firstControl,
-                control2: secondControl
-            )
-        }
-
-        return path
-    }
-
-}
-
-private enum SplashLayout {
-
-    static let canvasWidth: CGFloat = 375
-    static let canvasHeight: CGFloat = 812
-    static let laneCount = 7
-    static let firstLaneX: CGFloat = 0.58
-    static let laneSpacing: CGFloat = 62.14
-    static let trackLineWidth: CGFloat = 3.52
-
-    static let backgroundColor = Color.mainRed
-
-    static let laneLineColor = Color(
-        red: 255 / 255,
-        green: 244 / 255,
-        blue: 232 / 255,
-        opacity: 0.2
-    )
-
-    static let curveLineColor = Color(
-        red: 245 / 255,
-        green: 201 / 255,
-        blue: 185 / 255,
-        opacity: 0.2
-    )
 
 }
