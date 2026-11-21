@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
 
     let onStartGame: () -> Void
+    let onShowRanking: () -> Void
 
     @State private var viewModel = HomeViewModel()
 
@@ -47,10 +48,16 @@ private extension HomeView {
 
             Spacer(minLength: 0)
 
-            Image(.icRanking)
+            // Figma `ic_ranking`: 48pt 터치 영역 가운데 막대 3개 그림.
+            Button(action: onShowRanking) {
+                Image(.icRanking)
+                    .frame(width: 48, height: 48)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("랭킹")
         }
-        .padding(.leading, 20)
-        .padding(.trailing, 10)
+        .padding(.horizontal, 20)
     }
 
     var memberList: some View {
