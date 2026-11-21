@@ -31,9 +31,10 @@ final class GameRoomViewModel {
         isMeReady = true
     }
 
-    func select(_ game: Game) {
-        guard isAllReady else { return }
+    func select(_ game: Game) -> Bool {
+        guard isAllReady else { return false }
         selectedGame = game
+        return true
     }
 
 }

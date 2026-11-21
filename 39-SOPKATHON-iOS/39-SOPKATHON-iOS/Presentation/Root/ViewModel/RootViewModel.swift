@@ -22,6 +22,9 @@ final class RootViewModel {
 
     func push(_ route: AppRoute) {
         guard path.last != route else { return }
+        if case .game = route {
+            guard path.last == .gameRoom else { return }
+        }
         path.append(route)
     }
 
@@ -40,9 +43,11 @@ final class RootViewModel {
     }
 
     func startNextGame() {
-        guard let result = completedGameResult,
-              path.last == .game(result.game) else { return }
-        let nextGame: Game = result.game == .horseRace ? .tugOfWar : .horseRace
+        guard case .game(let game) = path.last else { return }
+        let nextGame: Game = switch game {
+        case .horseRace: .tugOfWar
+        case .tugOfWar: .horseRace
+        }
         path[path.count - 1] = .game(nextGame)
     }
 

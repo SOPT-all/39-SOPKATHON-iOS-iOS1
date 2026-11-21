@@ -71,9 +71,9 @@ private extension GameRoomView {
                     isSelected: viewModel.selectedGame == game,
                     isEnabled: viewModel.isAllReady
                 ) {
-                    guard viewModel.isAllReady else { return }
-                    viewModel.select(game)
-                    onSelectGame(game)
+                    if viewModel.select(game) {
+                        onSelectGame(game)
+                    }
                 }
             }
         }
