@@ -27,12 +27,6 @@ final class GameRoomViewModel {
         isMeReady && isOthersReady
     }
 
-    var guideText: String {
-        isAllReady
-            ? "전원 준비완료! 플레이할 종목을 선택해 주세요."
-            : "모든 팀원이 준비 완료하면 종목을 선택할 수 있어요."
-    }
-
     func ready() {
         isMeReady = true
     }

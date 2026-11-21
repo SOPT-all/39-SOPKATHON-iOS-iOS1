@@ -26,7 +26,7 @@ struct GameRoomView: View {
             .frame(maxWidth: .infinity)
             .padding(.top, 2)
 
-            Text(viewModel.guideText)
+            Text("전원 준비완료! 플레이할 종목을 선택해 주세요.")
                 .appFont(.captionLMedium)
                 .foregroundStyle(Color(hex: 0x374151))
                 .padding(.top, 8)
