@@ -10,6 +10,9 @@ import SwiftUI
 struct SoundTugView: View {
 
     let onFinish: (Double) -> Void
+    let onNextGame: () -> Void
+    let onGoHome: () -> Void
+    var result: SoundTugResult? = nil
 
     @Environment(\.scenePhase) private var scenePhase
     @State private var viewModel = SoundTugViewModel()
@@ -67,6 +70,16 @@ struct SoundTugView: View {
             }
         }
         .background(backgroundColor.ignoresSafeArea())
+        .overlay {
+            if viewModel.state == .finished {
+                SoundTugGameOver(
+                    personalScore: viewModel.highestScore,
+                    result: result,
+                    onNextGame: onNextGame,
+                    onGoHome: onGoHome
+                )
+            }
+        }
         .onDisappear { viewModel.cancel() }
         .onChange(of: viewModel.state) { _, state in
             if state == .finished {

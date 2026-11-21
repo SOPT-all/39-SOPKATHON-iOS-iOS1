@@ -15,24 +15,30 @@ struct GameResultPopup: View {
     enum Record {
         /// 경마 `totalFinishTimeMilliseconds`. "12.50초"로 표시함.
         case finishTime(milliseconds: Int64)
-        /// 소리 줄다리기 `totalMaxDecibel`. "85.3dB"로 표시함.
-        case maxDecibel(Double)
+        /// 소리 줄다리기 팀 총 음량 점수. 물리적 데시벨이 아님.
+        case volumeScore(Double)
     }
 
     let gameTitle: String
     let mySchool: String
     let opponentSchool: String
-    let isWin: Bool
-    let myTeamRecord: Record
-    let opponentTeamRecord: Record
+    let isWin: Bool?
+    let myTeamRecord: Record?
+    let opponentTeamRecord: Record?
     /// 점수가 없으면 nil이며 "-"로 표시함.
     let score: Int?
     let onNextGame: () -> Void
     let onGoHome: () -> Void
+    var teamRecordTitle = "평균 기록"
+    var personalRecord: Record? = nil
+    var personalRecordTitle = "내 기록"
+    var resultMessage: String? = nil
 
     var body: some View {
         VStack(spacing: 13) {
-            GameResultBanner(mySchool: mySchool, opponentSchool: opponentSchool, isWin: isWin)
+            if let isWin {
+                GameResultBanner(mySchool: mySchool, opponentSchool: opponentSchool, isWin: isWin)
+            }
             resultCard
         }
     }
@@ -84,8 +90,16 @@ private extension GameResultPopup {
     var records: some View {
         VStack(spacing: 8) {
             recordRow(title: "게임", value: gameTitle, isEmphasized: true)
-            recordRow(title: "우리 팀 평균 기록", value: recordText(myTeamRecord))
-            recordRow(title: "상대 팀 평균 기록", value: recordText(opponentTeamRecord))
+            if let resultMessage {
+                Text(resultMessage)
+                    .appFont(.captionLRegular)
+                    .multilineTextAlignment(.center)
+            }
+            if let personalRecord {
+                recordRow(title: personalRecordTitle, value: recordText(personalRecord))
+            }
+            recordRow(title: "우리 팀 \(teamRecordTitle)", value: recordText(myTeamRecord))
+            recordRow(title: "상대 팀 \(teamRecordTitle)", value: recordText(opponentTeamRecord))
             recordRow(title: "획득 점수", value: score.map { "\($0)점" } ?? "-")
         }
         .foregroundStyle(Palette.recordText)
@@ -103,12 +117,13 @@ private extension GameResultPopup {
         .frame(height: 18)
     }
 
-    func recordText(_ record: Record) -> String {
+    func recordText(_ record: Record?) -> String {
+        guard let record else { return "-" }
         switch record {
         case .finishTime(let milliseconds):
-            String(format: "%.2f초", Double(milliseconds) / 1000)
-        case .maxDecibel(let decibel):
-            String(format: "%.1fdB", decibel)
+            return String(format: "%.2f초", Double(milliseconds) / 1000)
+        case .volumeScore(let score):
+            return String(format: "%.1f점", score)
         }
     }
 

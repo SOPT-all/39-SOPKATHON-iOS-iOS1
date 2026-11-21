@@ -37,6 +37,11 @@ final class RootViewModel {
         path.removeAll()
     }
 
+    func finishToGameRoom(from game: Game) {
+        guard path.last == .game(game) else { return }
+        path.removeLast()
+    }
+
     func finishGame(_ result: GameResult) {
         guard path.last == .game(result.game) else { return }
         completedGameResult = result
