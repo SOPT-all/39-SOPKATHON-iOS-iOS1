@@ -1,12 +1,12 @@
 <div align="leading">
 
-# 서비스 이름
+# 반하나:  우리 반이 하나 되는 온라인 운동회
 
 <!-- 서비스명 확정 후 위 제목을 변경하고, 필요하면 여기에 로고 또는 배너를 추가해 주세요. -->
 
 ### 우리 반에서 시작되는, 새로운 연결
 
-초·중·고등학생이 함께하는 게임으로 반 사이의 연결을 이어가는 iOS 앱
+같은 반 친구들이 온라인에서 하나의 협동 게임을 함께 수행하고, 반 대항전을 통해 공동의 목표를 달성하며 유대감을 형성하는 온라인 운동회 서비스
 
 **39기 PLAY SOPT · 솝커톤 iOS 1조**
 </div>
@@ -56,10 +56,10 @@
     <td align="center"><a href="https://github.com/siiooin"><b>전시언</b></a><br><sub>@siiooin</sub></td>
   </tr>
   <tr>
-    <td align="center"><code>담당 화면 입력</code><br><code>담당 기능 입력</code></td>
-    <td align="center"><code>담당 화면 입력</code><br><code>담당 기능 입력</code></td>
-    <td align="center"><code>담당 화면 입력</code><br><code>담당 기능 입력</code></td>
-    <td align="center"><code>담당 화면 입력</code><br><code>담당 기능 입력</code></td>
+    <td align="center"><code>소리 줄다리기</code><br><code>해당 게임 전체 플로우</code></td>
+    <td align="center"><code>경마 연타 전체</code><br><code>해당 게임 전체 플로우</code></td>
+    <td align="center"><code>앱 진입 플로우, 종료 화면</code><br><code>초대 링크를 딥링크</code></td>
+    <td align="center"><code>앱 진입 플로우</code><br><code>랭킹 화면</code></td>
   </tr>
 </table>
 
