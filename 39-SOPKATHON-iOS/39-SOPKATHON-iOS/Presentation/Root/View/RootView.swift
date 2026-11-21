@@ -46,10 +46,17 @@ struct RootView: View {
                 onGoHome: { viewModel.popToRoot() }
             )
         case .tugOfWar:
-            // TODO: 결과 뷰 추가 시 completedGameResult로 표시하고 startNextGame/popToRoot 연결 필요.
-            SoundTugView { score in
-                viewModel.finishGame(.tugOfWar(score: score))
-            }
+            SoundTugView(
+                onFinish: { score in
+                    viewModel.finishGame(.tugOfWar(score: score))
+                },
+                onNextGame: {
+                    if viewModel.path.last == .game(.tugOfWar) {
+                        viewModel.pop()
+                    }
+                },
+                onGoHome: { viewModel.popToRoot() }
+            )
         }
     }
 
