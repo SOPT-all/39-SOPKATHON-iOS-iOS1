@@ -46,6 +46,11 @@ final class HorseRaceViewModel {
         return min(Double(runnerTapCount) / Double(runnerExitTapCount), 1)
     }
 
+    /// 탭할 때마다 달리기 자세를 번갈아 바꿈. 탭 수가 홀수면 두 번째 자세.
+    var isSecondRunnerPose: Bool {
+        !tapCount.isMultiple(of: 2)
+    }
+
     var isReady: Bool {
         phase == .ready
     }

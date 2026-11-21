@@ -40,7 +40,8 @@ struct HorseRaceView: View {
                     GeometryReader { proxy in
                         // 화면 폭만큼 밀면 그림자 왼쪽 끝까지 화면 밖으로 나감.
                         HorseRaceRunningOverlay(
-                            runnerOffset: proxy.size.width * viewModel.runnerProgress
+                            runnerOffset: proxy.size.width * viewModel.runnerProgress,
+                            isSecondRunnerPose: viewModel.isSecondRunnerPose
                         )
                         .frame(maxWidth: .infinity)
                     }
@@ -88,12 +89,18 @@ private struct HorseRaceRunningOverlay: View {
 
     /// 트랙 끝에 닿은 뒤 달리는 사람과 그림자를 오른쪽으로 미는 거리.
     let runnerOffset: CGFloat
+    /// true면 Figma "달리기2", false면 "달리기1" 자세를 그림.
+    let isSecondRunnerPose: Bool
 
     var body: some View {
         ZStack(alignment: .topLeading) {
             ZStack(alignment: .topLeading) {
-                Image(.horseRaceRunner)
-                    .offset(x: 132.067, y: 290.583)
+                // Figma 달리기 에셋(379 x 323.671)을 화면 속 달리는 사람 폭 115pt로 줄임.
+                // 에셋이 runner 프레임보다 위로 1.78% 커서 그만큼 위로 올림.
+                Image(isSecondRunnerPose ? .horseRaceRunner2 : .horseRaceRunner1)
+                    .resizable()
+                    .frame(width: 115, height: 98.211)
+                    .offset(x: 132.067, y: 288.862)
 
                 Image(.horseRaceRunnerShadow)
                     .offset(x: 0, y: 342.164)
