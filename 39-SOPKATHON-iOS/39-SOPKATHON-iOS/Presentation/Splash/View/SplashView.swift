@@ -1,5 +1,5 @@
 //
-//  MyPageView.swift
+//  SplashView.swift
 //  39-SOPKATHON-iOS
 //
 //  Created by Eda3399 on 11/22/26.
@@ -7,70 +7,69 @@
 
 import SwiftUI
 
-struct MyPageView: View {
+struct SplashView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let scale = max(
-                geometry.size.width / MyPageLayout.canvasWidth,
-                geometry.size.height / MyPageLayout.canvasHeight
-            )
+            let widthScale = geometry.size.width / SplashLayout.canvasWidth
+            let heightScale = geometry.size.height / SplashLayout.canvasHeight
 
-            MyPageCanvas()
-                .frame(
-                    width: MyPageLayout.canvasWidth,
-                    height: MyPageLayout.canvasHeight
-                )
-                .scaleEffect(scale)
-                .position(
-                    x: geometry.size.width / 2,
-                    y: geometry.size.height / 2
-                )
+            ZStack {
+                SplashTrackBackground()
+                    .frame(
+                        width: SplashLayout.canvasWidth,
+                        height: SplashLayout.canvasHeight
+                    )
+                    .scaleEffect(max(widthScale, heightScale))
+
+                SplashArtwork()
+                    .scaleEffect(min(widthScale, heightScale))
+            }
+            .position(
+                x: geometry.size.width / 2,
+                y: geometry.size.height / 2
+            )
         }
-        .background(MyPageLayout.backgroundColor)
+        .background(SplashLayout.backgroundColor)
         .ignoresSafeArea()
     }
 
 }
 
-private struct MyPageCanvas: View {
+private struct SplashArtwork: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            MyPageTrackBackground()
-
-            Image(.mypageTitle)
+            Image(.splashTitle)
                 .resizable()
                 .frame(width: 293.32, height: 195.75)
                 .position(x: 183.48, y: 317.69)
                 .accessibilityLabel("우리 반이 하나가 되는 온라인 운동회")
 
-            Image(.mypageRunnerShadow)
+            Image(.splashRunnerShadow)
                 .resizable()
-                .frame(width: 180.81, height: 191.52)
-                .scaleEffect(x: 1, y: -1)
-                .rotationEffect(.degrees(-90))
-                .position(x: 159.67, y: 686.61)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 227, height: 259)
+                .position(x: 163.5, y: 670.5)
                 .accessibilityHidden(true)
 
-            Image(.mypageRunner)
+            Image(.splashRunner)
                 .resizable()
-                .frame(width: 56.25, height: 47.09)
-                .scaleEffect(x: 1, y: -1)
-                .rotationEffect(.degrees(-90))
-                .position(x: 278.72, y: 612.15)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 48, height: 57)
+                .position(x: 279.17, y: 612.55)
                 .accessibilityHidden(true)
         }
         .frame(
-            width: MyPageLayout.canvasWidth,
-            height: MyPageLayout.canvasHeight
+            width: SplashLayout.canvasWidth,
+            height: SplashLayout.canvasHeight
         )
         .clipped()
     }
 
 }
 
-private struct MyPageTrackBackground: View {
+private struct SplashTrackBackground: View {
 
     private let curvePoints: [[CGPoint]] = [
         [
@@ -121,7 +120,7 @@ private struct MyPageTrackBackground: View {
         Canvas { context, size in
             context.fill(
                 Path(CGRect(origin: .zero, size: size)),
-                with: .color(MyPageLayout.backgroundColor)
+                with: .color(SplashLayout.backgroundColor)
             )
 
             drawLaneLines(in: &context, height: size.height)
@@ -135,16 +134,16 @@ private struct MyPageTrackBackground: View {
     ) {
         var path = Path()
 
-        for index in 0..<7 {
-            let x = 0.58 + (CGFloat(index) * 62.14)
+        for index in 0..<SplashLayout.laneCount {
+            let x = SplashLayout.firstLaneX + (CGFloat(index) * SplashLayout.laneSpacing)
             path.move(to: CGPoint(x: x, y: 0))
             path.addLine(to: CGPoint(x: x, y: height))
         }
 
         context.stroke(
             path,
-            with: .color(MyPageLayout.laneLineColor),
-            lineWidth: 3.52
+            with: .color(SplashLayout.laneLineColor),
+            lineWidth: SplashLayout.trackLineWidth
         )
     }
 
@@ -152,8 +151,8 @@ private struct MyPageTrackBackground: View {
         for points in curvePoints {
             context.stroke(
                 makeSmoothPath(points),
-                with: .color(MyPageLayout.curveLineColor),
-                lineWidth: 3.52
+                with: .color(SplashLayout.curveLineColor),
+                lineWidth: SplashLayout.trackLineWidth
             )
         }
     }
@@ -190,16 +189,16 @@ private struct MyPageTrackBackground: View {
 
 }
 
-private enum MyPageLayout {
+private enum SplashLayout {
 
     static let canvasWidth: CGFloat = 375
     static let canvasHeight: CGFloat = 812
+    static let laneCount = 7
+    static let firstLaneX: CGFloat = 0.58
+    static let laneSpacing: CGFloat = 62.14
+    static let trackLineWidth: CGFloat = 3.52
 
-    static let backgroundColor = Color(
-        red: 189 / 255,
-        green: 46 / 255,
-        blue: 32 / 255
-    )
+    static let backgroundColor = Color.mainRed
 
     static let laneLineColor = Color(
         red: 255 / 255,
@@ -215,8 +214,4 @@ private enum MyPageLayout {
         opacity: 0.2
     )
 
-}
-
-#Preview {
-    MyPageView()
 }
