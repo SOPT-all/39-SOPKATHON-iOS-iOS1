@@ -38,10 +38,10 @@
 
 <table>
   <tr>
-    <th align="center" width="25%">📸 사진 추가 예정</th>
-    <th align="center" width="25%">📸 사진 추가 예정</th>
-    <th align="center" width="25%">📸 사진 추가 예정</th>
-    <th align="center" width="25%">📸 사진 추가 예정</th>
+    <th align="center" width="25%"><a href="https://github.com/ser0kim"><img src="https://avatars.githubusercontent.com/u/62247743?s=240&u=97f55d10dea64f6cdfdb7ed3e90b37f3a9f68e1e&v=4" width="200" alt="김세령 GitHub 프로필" /></a></th>
+    <th align="center" width="25%"><a href="https://github.com/limtjdghks"><img src="https://avatars.githubusercontent.com/u/84004766?s=240&u=47875a5d6003337c5085dd0fc4de89c772b7163b&v=4" width="200" alt="임성환 GitHub 프로필" /></a></th>
+    <th align="center" width="25%"><a href="https://github.com/Eda3399"><img src="https://avatars.githubusercontent.com/u/216501764?s=240&v=4" width="200" alt="김보영 GitHub 프로필" /></a></th>
+    <th align="center" width="25%"><a href="https://github.com/siiooin"><img src="https://avatars.githubusercontent.com/u/200627004?s=240&v=4" width="200" alt="전시언 GitHub 프로필" /></a></th>
   </tr>
   <tr>
     <td align="center"><b>iOS</b></td>
