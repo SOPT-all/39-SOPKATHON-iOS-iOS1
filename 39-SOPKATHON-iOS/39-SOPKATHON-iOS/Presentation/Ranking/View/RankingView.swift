@@ -50,6 +50,7 @@ struct RankingView: View {
                 endPoint: .bottom
             )
             .frame(height: 208)
+            .ignoresSafeArea(edges: .bottom)
             .allowsHitTesting(false)
         }
         .toolbar(.hidden, for: .navigationBar)
@@ -307,4 +308,10 @@ private enum RankingData {
         )
     ]
 
+}
+
+#Preview {
+    NavigationStack {
+        RankingView()
+    }
 }
