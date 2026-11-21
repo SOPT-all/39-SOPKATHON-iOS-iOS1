@@ -27,6 +27,7 @@ struct GameWaitingView: View {
     }
 
 }
+
 private struct GameWaitingArtwork: View {
 
     var body: some View {
