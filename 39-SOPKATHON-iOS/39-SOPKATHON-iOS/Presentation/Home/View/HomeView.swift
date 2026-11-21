@@ -13,6 +13,7 @@ struct HomeView: View {
     @State private var isGameRoomPresented = false
 
     var body: some View {
+        // 홈이 화면 이동 스택을 소유함. 상위 화면에서 NavigationStack으로 다시 감싸지 않음.
         NavigationStack {
             VStack(alignment: .leading, spacing: 0) {
                 header
@@ -35,6 +36,7 @@ struct HomeView: View {
             .background(alignment: .topLeading) {
                 HomeBackground()
             }
+            .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(isPresented: $isGameRoomPresented) {
                 GameRoomView()
             }
@@ -75,6 +77,8 @@ private extension HomeView {
 private struct HomeBackground: View {
 
     private let figmaWidth: CGFloat = 375
+    /// `img_home_runner_shadow` SVG 원본 크기. 에셋을 바꾸면 함께 수정함.
+    private let shadowSize = CGSize(width: 200.426, height: 167.799)
 
     var body: some View {
         GeometryReader { proxy in
@@ -108,7 +112,7 @@ private struct HomeBackground: View {
 
     /// 그림자 이미지 중심을 기준으로 기울인 뒤 회전함.
     private var shadowTransform: CGAffineTransform {
-        let center = CGPoint(x: 200.426 / 2, y: 167.799 / 2)
+        let center = CGPoint(x: shadowSize.width / 2, y: shadowSize.height / 2)
         let skew = CGAffineTransform(a: 1, b: 0, c: tan(-48 * .pi / 180), d: 1, tx: 0, ty: 0)
         return CGAffineTransform(translationX: -center.x, y: -center.y)
             .concatenating(skew)
