@@ -27,12 +27,11 @@ struct GameWaitingView: View {
     }
 
 }
-
 private struct GameWaitingArtwork: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Image("game_waiting_character")
+            Image(.gameWaitingRunner)
                 .resizable()
                 .frame(
                     width: GameWaitingLayout.runnerFrame.width,
@@ -44,8 +43,9 @@ private struct GameWaitingArtwork: View {
                 )
                 .accessibilityHidden(true)
 
-            Image("game_waiting_message")
+            Image(.gameWaitingMessage)
                 .resizable()
+                .aspectRatio(contentMode: .fit)
                 .frame(
                     width: GameWaitingLayout.messageFrame.width,
                     height: GameWaitingLayout.messageFrame.height
@@ -81,9 +81,4 @@ private enum GameWaitingLayout {
         height: 108.4243
     )
 
-}
-
-#Preview("게임 대기") {
-    GameWaitingView()
-        .frame(width: 375, height: 812)
 }
