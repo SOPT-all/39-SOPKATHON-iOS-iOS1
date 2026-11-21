@@ -7,18 +7,50 @@
 
 import SwiftUI
 
-/// 게임방의 종목 선택 카드. 사용 예: GameCard(game: .horseRace, isSelected: true) { }
-/// `isEnabled`가 false면 탭만 막고, 버튼은 Figma 회색 상태 그대로 보여줌.
+/// 게임방의 종목 선택 카드. 카드 전체를 탭해 종목을 고름.
+/// 사용 예: GameCard(game: .horseRace, status: .available) { select(.horseRace) }
 struct GameCard: View {
 
+    enum Status {
+        /// 양 팀 준비 전: 회색 이미지, 흐리게, 탭 불가
+        case locked
+        /// 선택 가능: 회색 이미지
+        case available
+        /// 선택됨: 컬러 이미지와 "당선" 배지
+        case selected
+        /// 다른 종목이 선택됨: 회색 이미지, 탭 불가
+        case unselected
+    }
+
     let game: Game
-    let isSelected: Bool
-    var isEnabled = true
+    let status: Status
     let onSelect: () -> Void
 
     var body: some View {
+        Button(action: onSelect) {
+            card
+        }
+        .buttonStyle(.plain)
+        .allowsHitTesting(status == .available)
+        .overlay(alignment: .topLeading) {
+            if status == .selected {
+                Image(.imgBadgeSelected)
+                    .offset(x: 204.75, y: 4.75)
+                    .transition(.scale(scale: 0.3).combined(with: .opacity))
+                    .allowsHitTesting(false)
+            }
+        }
+        .opacity(status == .locked ? 0.2 : 1)
+        .animation(.spring(response: 0.35, dampingFraction: 0.6), value: status)
+    }
+
+}
+
+private extension GameCard {
+
+    var card: some View {
         Color(hex: 0xC8C8C8)
-            .frame(height: 200)
+            .frame(height: 162)
             .overlay(alignment: .topLeading) { backgroundImage }
             .overlay(alignment: .topLeading) {
                 backgroundImage
@@ -26,43 +58,46 @@ struct GameCard: View {
                     .mask(alignment: .topLeading) { infoArea }
             }
             .overlay(alignment: .topLeading) {
-                LinearGradient(
-                    colors: [.clear, gradientEndColor],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(height: infoAreaHeight)
-                .offset(y: infoAreaTop)
-                .allowsHitTesting(false)
+                LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
+                    .frame(height: infoAreaHeight)
+                    .offset(y: infoAreaTop)
+                    .allowsHitTesting(false)
             }
             .overlay(alignment: .topLeading) { content }
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .contentShape(RoundedRectangle(cornerRadius: 12))
     }
 
-}
-
-private extension GameCard {
-
-    /// Figma에서 배경 이미지를 카드보다 크게 두고 일부만 보이도록 배치한 값.
-    var imageLayout: (image: ImageResource, size: CGSize, offset: CGSize) {
-        switch game {
-        case .horseRace:
-            (.imgGameRelay, CGSize(width: 1331, height: 442), CGSize(width: -224, height: -142))
-        case .tugOfWar:
-            (.imgGameTug, CGSize(width: 2048, height: 680), CGSize(width: -857, height: -286))
+    /// 선택된 종목만 컬러 이미지, 나머지는 회색 이미지(Figma 홈-6·7 기준).
+    var image: ImageResource {
+        switch (game, status == .selected) {
+        case (.horseRace, true): .imgGameRelay
+        case (.horseRace, false): .imgGameRelayGray
+        case (.tugOfWar, true): .imgGameTug
+        case (.tugOfWar, false): .imgGameTugGray
         }
     }
 
-    var gradientEndColor: Color {
+    var titleImage: ImageResource {
         switch game {
-        case .horseRace: .black
-        case .tugOfWar: Color(hex: 0x4E3718)
+        case .horseRace: .imgTitleRelay
+        case .tugOfWar: .imgTitleTug
+        }
+    }
+
+    /// Figma에서 배경 이미지를 카드보다 크게 두고 일부만 보이도록 배치한 값.
+    var imageLayout: (size: CGSize, offset: CGSize) {
+        switch game {
+        case .horseRace:
+            (CGSize(width: 1331, height: 442), CGSize(width: -224, height: -142))
+        case .tugOfWar:
+            (CGSize(width: 2048, height: 680), CGSize(width: -857, height: -286))
         }
     }
 
     /// 카드보다 큰 이미지라 잘린 바깥 영역이 다른 카드의 터치를 가로채지 않게 터치를 막음.
     var backgroundImage: some View {
-        Image(imageLayout.image)
+        Image(image)
             .resizable()
             .scaledToFill()
             .frame(width: imageLayout.size.width, height: imageLayout.size.height)
@@ -71,7 +106,7 @@ private extension GameCard {
     }
 
     /// Figma `Frame 200`(블러·그라데이션 영역)의 카드 내 위치.
-    var infoAreaTop: CGFloat { 34 }
+    var infoAreaTop: CGFloat { 40 }
 
     var infoAreaHeight: CGFloat { 166 }
 
@@ -91,31 +126,16 @@ private extension GameCard {
     }
 
     var content: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(game.title)
-                    .appFont(.subHeaderLSemiBold)
-                Text(game.description)
-                    .appFont(.bodyMRegular)
-            }
-            .foregroundStyle(.white)
-
-            Button(action: onSelect) {
-                Text("이 게임 할래요")
-                    .font(AppFont.bodyLSemiBold.font)
-                    .foregroundStyle(isSelected ? .white : Color(hex: 0x767676))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 44)
-                    .background(isSelected ? Color.mainRed : Color(hex: 0xD9D9D9))
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
-            }
-            .buttonStyle(.plain)
-            // .disabled는 버튼을 반투명하게 흐려 배경이 비쳐 보이므로 탭만 막음.
-            .allowsHitTesting(isEnabled)
-            .padding(.top, 4)
+        VStack(alignment: .leading, spacing: 4) {
+            Image(titleImage)
+                .accessibilityLabel(game.title)
+            Text(game.description)
+                .appFont(.bodyMRegular)
+                .foregroundStyle(.white)
         }
-        .padding(.horizontal, 11)
-        .padding(.top, infoAreaTop + 46)
+        .padding(.leading, 11)
+        .padding(.top, infoAreaTop + 59)
+        .allowsHitTesting(false)
     }
 
 }
