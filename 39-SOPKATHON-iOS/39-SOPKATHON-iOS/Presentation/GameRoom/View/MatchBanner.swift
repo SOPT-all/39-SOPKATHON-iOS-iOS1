@@ -7,66 +7,84 @@
 
 import SwiftUI
 
-/// 우리 학교와 상대 학교를 사선으로 나눠 보여주는 VS 배너.
-/// `myMembers`의 nil은 캐릭터 프로필로 표시함. 상대 팀은 인원수만큼 검정 원으로 표시함.
+/// 우리 팀과 상대 팀을 사선으로 나눠 보여주는 VS 배너.
+/// 준비 전에는 회색, 우리 팀이 준비하면 왼쪽이 빨간색, 상대 팀이 준비하면 오른쪽이 파란색이 됨.
+/// Figma 홈-4(준비 전)·홈-3(우리 팀 준비)·홈-5(양 팀 준비) 335x96 좌표 기준.
 struct MatchBanner: View {
 
     let mySchool: String
     let opponentSchool: String
-    let myMembers: [String?]
-    let opponentCount: Int
-
-    private let avatarSize: CGFloat = 43
-    private let avatarStep: CGFloat = 34
+    let myMembers: [String]
+    let opponentMembers: [String]
+    let isMyTeamReady: Bool
+    let isOpponentReady: Bool
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Color.black
+            (isMyTeamReady ? Color.mainRed : Palette.idle)
 
             Image(.imgVsShapeBack)
                 .offset(x: 142)
-            Image(.imgVsShapeFront)
+            Image(isOpponentReady ? .imgVsShapeBlue : .imgVsShapeGray)
                 .offset(x: 153, y: -4)
 
-            SchoolTag(title: mySchool, style: .onDark)
+            SchoolTag(title: mySchool, style: isMyTeamReady ? .onDark : .matchDimmed)
                 .offset(x: 8, y: 7)
-            SchoolTag(title: opponentSchool, style: .onLight)
-                .offset(x: 192, y: 7)
+            SchoolTag(title: opponentSchool, style: opponentTagStyle)
+                .offset(x: isAnyReady ? 191 : 192, y: isAnyReady ? 66 : 7)
 
-            myAvatars
+            avatarPair(myMembers, color: isMyTeamReady ? .mainRed : .black)
                 .offset(x: 12, y: 39)
-            opponentAvatars
-                .frame(width: 335 - 13, alignment: .trailing)
-                .offset(y: 39)
+            avatarPair(opponentMembers, color: isOpponentReady ? Palette.blue : .black)
+                .offset(x: isAnyReady ? 248 : 245, y: isAnyReady ? 14 : 39)
+
+            if isMyTeamReady {
+                readyLettering
+                    .offset(x: 89, y: 67)
+            }
+            if isOpponentReady {
+                readyLettering
+                    .offset(x: 183, y: 9)
+            }
         }
         .frame(width: 335, height: 96)
         .clipShape(RoundedRectangle(cornerRadius: 8))
+        .animation(.easeInOut(duration: 0.25), value: isMyTeamReady)
+        .animation(.easeInOut(duration: 0.25), value: isOpponentReady)
     }
 
 }
 
 private extension MatchBanner {
 
-    /// 왼쪽 멤버가 위에 오도록 겹쳐 배치함.
-    var myAvatars: some View {
-        let members = Array(myMembers.prefix(2).enumerated())
-        return ZStack(alignment: .leading) {
-            ForEach(members.reversed(), id: \.offset) { index, name in
-                ProfileAvatar(name: name, size: avatarSize, style: .light)
-                    .offset(x: CGFloat(index) * avatarStep)
-            }
-        }
+    enum Palette {
+        static let idle = Color(hex: 0xD8D8D8)
+        static let blue = Color(hex: 0x1A4196)
     }
 
-    /// 왼쪽 원이 위에 오도록 겹쳐 배치함.
-    var opponentAvatars: some View {
-        ZStack(alignment: .trailing) {
-            ForEach(0..<min(opponentCount, 2), id: \.self) { index in
-                Circle()
-                    .fill(.black)
-                    .overlay { Circle().stroke(.white, lineWidth: 2) }
-                    .frame(width: avatarSize, height: avatarSize)
-                    .offset(x: -CGFloat(index) * avatarStep)
+    /// Figma에서 어느 팀이든 준비하면 상대 팀 프로필이 위로, 학교 태그가 아래로 이동함.
+    var isAnyReady: Bool {
+        isMyTeamReady || isOpponentReady
+    }
+
+    var opponentTagStyle: SchoolTag.Style {
+        if isOpponentReady { return .onDark }
+        return isAnyReady ? .matchOnLight : .matchDimmed
+    }
+
+    var readyLettering: some View {
+        Image(.imgReady)
+            .renderingMode(.template)
+            .foregroundStyle(.white)
+            .transition(.scale(scale: 0.6).combined(with: .opacity))
+    }
+
+    /// 왼쪽 프로필이 위에 오도록 두 명을 34pt 간격으로 겹쳐 배치함.
+    func avatarPair(_ names: [String], color: Color) -> some View {
+        ZStack(alignment: .leading) {
+            ForEach(Array(names.prefix(2).enumerated()).reversed(), id: \.offset) { index, name in
+                ProfileAvatar(name: name, size: 43, style: .light, letteringColor: color)
+                    .offset(x: CGFloat(index) * 34)
             }
         }
     }
