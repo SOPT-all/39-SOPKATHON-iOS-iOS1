@@ -4,26 +4,27 @@
 - 상태: 진행 중
 
 ## 흐름
-(진입 경로 미정) → "준비..." 3초 카운트다운 → "연타!!!" 화면에서 타이머 시작 → 버튼 59회로 트랙이 끝까지 흐름 →
-13회 더 누르면 달리는 사람이 화면 밖으로 나가며 완주(총 72회) → `onFinish`로 기록(초) 전달. 결과 화면은 미정임.
+게임방에서 종목 선택(`RootView`) → "준비..." 3초 카운트다운 → "연타!!!"에서 타이머 시작 → 72회 탭으로 완주 →
+"경기 종료!" 덮개 → 2초 간격으로 경기 완료 확인 → 완료되면 승패 배너·결과 카드 팝업 →
+"다음 게임 이어가기"는 게임방(종목 선택)으로, "홈 화면으로 이동"은 홈으로 돌아감(`RootView`의 `pop()`·`popToRoot()`).
 
 ## 주요 파일
 | 파일 | 역할 |
 | --- | --- |
-| `Presentation/HorseRace/View/HorseRaceTrack.swift` | Figma 트랙 좌표(2446 x 812)로 그린 배경과 흐르는 연출 |
-
-## 상태와 데이터
-- `phase`, `tapCount`만 저장하고 진행률·버튼 문구는 계산 속성임. 서버 API 없음.
+| `View/HorseRaceTrack.swift` | Figma 트랙 좌표(2446 x 812)로 그린 배경과 흐르는 연출 |
+| `View/HorseRaceGameOver.swift` | 완주 후 덮개. 결과 전 "경기 종료!", 결과 후 공통 `GameResultPopup` |
+| `ViewModel/HorseRaceViewModel.swift` | 탭 수·단계(`HorseRacePhase`)와 완료 확인(`waitForResult`) |
 
 ## 주요 결정
-- Figma UI(2098:7627·2098:7546)에 기록 표시가 없어 기록은 `onFinish`로만 전달함.
-- 탭은 버튼만 셈. 준비·완주 중 탭은 ViewModel이 무시함. `disabled`로 막으면 버튼이 흐려져 디자인과 달라짐.
-
-## 다른 화면에서 쓸 수 있는 것
-- 없음
+- 결과 팝업은 소리 줄다리기와 디자인이 같아 공통 `GameResultPopup`(배너 `GameResultBanner`)으로 둠.
+  기록은 서버 필드 단위대로 `GameResultPopup.Record`(완주 밀리초·최대 데시벨)로 받음. 에셋은 `Common/img_result_*`.
+- 승패는 화면이 정해 넘김. 경마는 완주 시간이 짧은 팀이 승리함(`HorseRaceResult.isWin`).
+- 완료 확인 실패도 미완료처럼 재확인함.
+- 배너 도형은 게임방 `img_vs_shape_back`·`img_vs_shape_front`를 재사용하고 색은 template으로 바꿈.
+- 공통 `SchoolTag`에 패배 쪽 태그용 `.dimmed` 스타일을 추가함.
 
 ## 주의·남은 일
 - 탭 수는 탭당 약 30pt 기준(트랙 약 1,770pt ÷ 30, 화면 폭 약 375pt ÷ 30). 트랙 길이를 바꾸면 함께 조정 필요.
 - 카운트다운 3초는 임시임. 서버 시작 신호 사용 여부 미정이라 TODO로 남김(`countdown`).
-- 완주 상태 디자인이 없어 버튼 문구만 "완주!"로 바꿈.
-- 결과 화면 연결, 기록 서버 전송, 다시 하기는 미구현임.
+- 완료 확인 API 명세가 없어 `fetchResult`가 임시 값으로 바로 완료 처리함. 학교·로고·상대 기록·점수도 임시 값임.
+- 기록 서버 전송은 미구현임. 경마는 `finishGame`을 부르지 않아 `GameResult.horseRace`는 쓰이지 않음.

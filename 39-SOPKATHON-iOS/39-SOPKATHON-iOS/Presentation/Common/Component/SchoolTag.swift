@@ -8,12 +8,14 @@
 import SwiftUI
 
 /// 학교·반 이름 태그. 홈 상단은 `.gray`, VS 배너 안은 `.onDark`(우리 학교)·`.onLight`(상대 학교).
+/// `.dimmed`는 경기 결과 배너에서 패배한 우리 학교에 사용함.
 struct SchoolTag: View {
 
     enum Style {
         case gray
         case onDark
         case onLight
+        case dimmed
     }
 
     let title: String
@@ -38,6 +40,7 @@ private extension SchoolTag {
         case .gray: Color(hex: 0x6B7280)
         case .onDark: .white
         case .onLight: Color(hex: 0x898989)
+        case .dimmed: Color(hex: 0x525252)
         }
     }
 
@@ -45,6 +48,7 @@ private extension SchoolTag {
         switch style {
         case .gray: Color(hex: 0xEDEDED)
         case .onDark, .onLight: .white.opacity(0.45)
+        case .dimmed: Color(hex: 0xA1A1A1, opacity: 0.45)
         }
     }
 
