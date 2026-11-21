@@ -30,6 +30,7 @@ struct SoundTugGameOver: View {
                 onGoHome: onGoHome,
                 teamRecordTitle: "총 음량 점수",
                 personalRecord: .volumeScore(personalScore),
+                personalRecordTitle: "내 최고 음량 점수",
                 resultMessage: resultMessage
             )
             .offset(y: -33)

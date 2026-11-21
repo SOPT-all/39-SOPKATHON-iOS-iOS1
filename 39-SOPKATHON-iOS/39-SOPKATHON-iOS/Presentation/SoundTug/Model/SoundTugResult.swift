@@ -20,6 +20,7 @@ struct SoundTugResult: Equatable {
     let opponentTeamTotalScore: Double
     let outcome: Outcome
 
+    // TODO: 서버 승점 응답 확정 시 교체 필요.
     var reward: Int? {
         switch outcome {
         case .win: 300

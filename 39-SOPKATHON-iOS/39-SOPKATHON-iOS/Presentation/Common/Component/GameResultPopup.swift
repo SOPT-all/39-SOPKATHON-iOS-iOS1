@@ -31,6 +31,7 @@ struct GameResultPopup: View {
     let onGoHome: () -> Void
     var teamRecordTitle = "평균 기록"
     var personalRecord: Record? = nil
+    var personalRecordTitle = "내 기록"
     var resultMessage: String? = nil
 
     var body: some View {
@@ -95,7 +96,7 @@ private extension GameResultPopup {
                     .multilineTextAlignment(.center)
             }
             if let personalRecord {
-                recordRow(title: "내 최고 음량 점수", value: recordText(personalRecord))
+                recordRow(title: personalRecordTitle, value: recordText(personalRecord))
             }
             recordRow(title: "우리 팀 \(teamRecordTitle)", value: recordText(myTeamRecord))
             recordRow(title: "상대 팀 \(teamRecordTitle)", value: recordText(opponentTeamRecord))

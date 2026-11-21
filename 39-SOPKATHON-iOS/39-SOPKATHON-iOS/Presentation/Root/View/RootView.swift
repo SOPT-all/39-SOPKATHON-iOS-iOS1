@@ -50,11 +50,7 @@ struct RootView: View {
                 onFinish: { score in
                     viewModel.finishGame(.tugOfWar(score: score))
                 },
-                onNextGame: {
-                    if viewModel.path.last == .game(.tugOfWar) {
-                        viewModel.pop()
-                    }
-                },
+                onNextGame: { viewModel.finishToGameRoom(from: .tugOfWar) },
                 onGoHome: { viewModel.popToRoot() }
             )
         }
