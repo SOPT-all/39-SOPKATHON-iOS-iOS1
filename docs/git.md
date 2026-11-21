@@ -43,6 +43,7 @@ refactor/#53
 
 - PR 제목의 별도 형식은 팀 합의에 따름.
 - PR은 `.github/PULL_REQUEST_TEMPLATE.md`를 사용하고 변경 내용·검증 결과를 작성함.
+- 리뷰어는 `.github/CODEOWNERS`로 팀원 전원에게 자동 요청되므로 `--reviewer`를 따로 지정하지 않음.
 
 ## PR·머지 체크리스트
 
