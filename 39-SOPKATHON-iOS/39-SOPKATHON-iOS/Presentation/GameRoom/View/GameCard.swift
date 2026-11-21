@@ -8,10 +8,12 @@
 import SwiftUI
 
 /// 게임방의 종목 선택 카드. 사용 예: GameCard(game: .horseRace, isSelected: true) { }
+/// `isEnabled`가 false면 탭만 막고, 버튼은 Figma 회색 상태 그대로 보여줌.
 struct GameCard: View {
 
     let game: Game
     let isSelected: Bool
+    var isEnabled = true
     let onSelect: () -> Void
 
     var body: some View {
@@ -31,6 +33,7 @@ struct GameCard: View {
                 )
                 .frame(height: infoAreaHeight)
                 .offset(y: infoAreaTop)
+                .allowsHitTesting(false)
             }
             .overlay(alignment: .topLeading) { content }
             .clipShape(RoundedRectangle(cornerRadius: 16))
@@ -57,12 +60,14 @@ private extension GameCard {
         }
     }
 
+    /// 카드보다 큰 이미지라 잘린 바깥 영역이 다른 카드의 터치를 가로채지 않게 터치를 막음.
     var backgroundImage: some View {
         Image(imageLayout.image)
             .resizable()
             .scaledToFill()
             .frame(width: imageLayout.size.width, height: imageLayout.size.height)
             .offset(imageLayout.offset)
+            .allowsHitTesting(false)
     }
 
     /// Figma `Frame 200`(블러·그라데이션 영역)의 카드 내 위치.
@@ -105,6 +110,8 @@ private extension GameCard {
                     .clipShape(RoundedRectangle(cornerRadius: 4))
             }
             .buttonStyle(.plain)
+            // .disabled는 버튼을 반투명하게 흐려 배경이 비쳐 보이므로 탭만 막음.
+            .allowsHitTesting(isEnabled)
             .padding(.top, 4)
         }
         .padding(.horizontal, 11)
