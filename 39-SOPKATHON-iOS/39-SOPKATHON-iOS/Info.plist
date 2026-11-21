@@ -4,6 +4,10 @@
 <dict>
 	<key>BASE_URL</key>
 	<string>$(BASE_URL)</string>
+	<key>CLASS_NUMBER</key>
+	<string>$(CLASS_NUMBER)</string>
+	<key>GRADE</key>
+	<string>$(GRADE)</string>
 	<key>MATCH_ID</key>
 	<string>$(MATCH_ID)</string>
 	<key>MEMBER_ID</key>
