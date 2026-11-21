@@ -28,7 +28,7 @@ struct MatchBanner: View {
             Image(isOpponentReady ? .imgVsShapeBlue : .imgVsShapeGray)
                 .offset(x: 153, y: -4)
 
-            SchoolTag(title: mySchool, style: isMyTeamReady ? .onDark : .dimmed)
+            SchoolTag(title: mySchool, style: isMyTeamReady ? .onDark : .matchDimmed)
                 .offset(x: 8, y: 7)
             SchoolTag(title: opponentSchool, style: opponentTagStyle)
                 .offset(x: isAnyReady ? 191 : 192, y: isAnyReady ? 66 : 7)
@@ -69,7 +69,7 @@ private extension MatchBanner {
 
     var opponentTagStyle: SchoolTag.Style {
         if isOpponentReady { return .onDark }
-        return isAnyReady ? .onLight : .dimmed
+        return isAnyReady ? .matchOnLight : .matchDimmed
     }
 
     var readyLettering: some View {
