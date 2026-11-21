@@ -10,12 +10,14 @@ import SwiftUI
 /// 매칭 완료 후 준비 완료와 종목 선택을 하는 게임방 화면.
 struct GameRoomView: View {
 
-    @Environment(\.dismiss) private var dismiss
+    let onBack: () -> Void
+    let onSelectGame: (Game) -> Void
+
     @State private var viewModel = GameRoomViewModel()
 
     var body: some View {
         VStack(spacing: 0) {
-            TopNavi(title: "매칭 완료!") { dismiss() }
+            TopNavi(title: "매칭 완료!", onBack: onBack)
 
             // 화면 높이가 작거나 가로 방향이면 카드가 넘치므로 가운데 영역만 스크롤함.
             ScrollView {
@@ -69,7 +71,9 @@ private extension GameRoomView {
                     isSelected: viewModel.selectedGame == game,
                     isEnabled: viewModel.isAllReady
                 ) {
-                    viewModel.select(game)
+                    if viewModel.select(game) {
+                        onSelectGame(game)
+                    }
                 }
             }
         }
