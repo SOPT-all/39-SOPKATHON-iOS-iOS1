@@ -31,14 +31,37 @@
 
 ## 02 · iOS Team
 
-<!-- 팀원별 이름과 담당 화면·기능을 채워 주세요. 역할은 확정 후 작성합니다. -->
+<!-- 각 열이 한 명의 팀원입니다. 사진 → 역할 → 이름/GitHub → 담당 화면·기능 순서로 채워 주세요.
+사진 칸 교체 예시: <img src="GitHub에 업로드한 사진 URL" width="200" alt="팀원 이름" />
+리드는 확정 후 해당 역할 칸을 Lead / iOS로 변경합니다.
+-->
 
-| 팀원 | GitHub | 담당 화면 | 담당 기능 |
-| :---: | :---: | --- | --- |
-| 이름 입력 | [@Eda3399](https://github.com/Eda3399) | 작성 예정 | 작성 예정 |
-| 이름 입력 | [@limtjdghks](https://github.com/limtjdghks) | 작성 예정 | 작성 예정 |
-| 김세령 | [@ser0kim](https://github.com/ser0kim) | 작성 예정 | 작성 예정 |
-| 이름 입력 | [@siiooin](https://github.com/siiooin) | 작성 예정 | 작성 예정 |
+<table>
+  <tr>
+    <th align="center" width="25%">📸 사진 추가 예정</th>
+    <th align="center" width="25%">📸 사진 추가 예정</th>
+    <th align="center" width="25%">📸 사진 추가 예정</th>
+    <th align="center" width="25%">📸 사진 추가 예정</th>
+  </tr>
+  <tr>
+    <td align="center"><b>iOS</b></td>
+    <td align="center"><b>iOS</b></td>
+    <td align="center"><b>iOS</b></td>
+    <td align="center"><b>iOS</b></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/Eda3399"><b>이름 입력</b></a><br><sub>@Eda3399</sub></td>
+    <td align="center"><a href="https://github.com/limtjdghks"><b>이름 입력</b></a><br><sub>@limtjdghks</sub></td>
+    <td align="center"><a href="https://github.com/ser0kim"><b>김세령</b></a><br><sub>@ser0kim</sub></td>
+    <td align="center"><a href="https://github.com/siiooin"><b>이름 입력</b></a><br><sub>@siiooin</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><code>담당 화면 입력</code><br><code>담당 기능 입력</code></td>
+    <td align="center"><code>담당 화면 입력</code><br><code>담당 기능 입력</code></td>
+    <td align="center"><code>담당 화면 입력</code><br><code>담당 기능 입력</code></td>
+    <td align="center"><code>담당 화면 입력</code><br><code>담당 기능 입력</code></td>
+  </tr>
+</table>
 
 <br>
 
