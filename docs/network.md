@@ -25,7 +25,8 @@
 - 주소는 `BASE_URL`로 전달함. `Info.plist`의 `BASE_URL` 항목이 빌드 설정 `$(BASE_URL)`을 참조하고
   `BaseService`가 이 값을 읽음.
 - 설정 파일은 `39-SOPKATHON-iOS/39-SOPKATHON-iOS/Config.xcconfig`이며 Git 제외 대상임.
-  `BASE_URL`·`MATCH_ID`·`MEMBER_ID`·`TEAM_SLOT`(시연 멤버의 팀 슬롯)을 이 파일에 설정함. 실제 값은 커밋하지 않음.
+  `BASE_URL`·`MATCH_ID`·`MEMBER_ID`·`TEAM_SLOT`(시연 멤버의 팀 슬롯)·`GRADE`·`CLASS_NUMBER`(홈 조회 학년·반)를
+  이 파일에 설정함. 실제 값은 커밋하지 않음.
 - 앱 타깃의 Debug·Release 모두 이 파일을 기본 빌드 설정으로 참조함.
   각 개발자는 같은 위치에 파일을 준비해야 함. 파일 자체는 앱 리소스 복사 대상에서 제외함.
 - URL의 `//`가 xcconfig 주석으로 처리되지 않도록 `https:/$()/...` 형식을 사용함.
@@ -47,9 +48,9 @@ let response: MatchReadyResponseDTO = try await BaseService.shared.request(
 )
 ```
 
-위 DTO 이름은 사용 예시이며 아직 구현하지 않았음.
-`Info.plist`의 `MATCH_ID`·`MEMBER_ID`는 같은 이름의 빌드 설정을 문자열로 참조함.
-줄다리기는 `SoundTugMatchContext`가 두 ID를 읽어 유효성을 검사하고 EndPoint에 전달함.
-우리 팀 슬롯은 시연 합의에 따라 1이며, 경기·멤버 ID를 임의 값으로 대체하지 않음.
+위 DTO 이름은 호출 형태를 설명하는 예시임. 화면별 실제 DTO는 `Data/Network/DTO/`에서 확인함.
+`Info.plist`의 `MATCH_ID`·`MEMBER_ID`·`TEAM_SLOT`·`GRADE`·`CLASS_NUMBER`는 같은 이름의 빌드 설정을 문자열로 참조함.
+각 화면의 설정 타입이 필요한 값을 읽음. 줄다리기는 `SoundTugMatchContext`가 경기·멤버 ID를 검증하고 EndPoint에 전달함.
+줄다리기의 우리 팀 슬롯은 시연 합의에 따라 1이며, 경기·멤버 ID를 임의 값으로 대체하지 않음.
 xcconfig의 값이 빌드된 Info.plist에 전달됨. 설정을 생략하면 빈 문자열이 될 수 있음.
 실제 호출 전 `BASE_URL` 빌드 설정에 서버 주소가 전달되는지 확인 필요함.

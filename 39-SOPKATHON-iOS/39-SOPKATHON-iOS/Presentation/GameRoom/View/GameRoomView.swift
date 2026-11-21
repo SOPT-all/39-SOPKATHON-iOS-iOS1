@@ -42,8 +42,22 @@ struct GameRoomView: View {
             onSelectGame(game)
         }
         // 게임 화면에서 돌아오면 다시 준비부터 시작할 수 있게 함.
-        .onAppear { viewModel.resetAfterGame() }
+        .onAppear {
+            viewModel.resetAfterGame()
+            viewModel.start()
+        }
         .onDisappear { viewModel.stop() }
+        .alert(
+            viewModel.errorMessage ?? "",
+            isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { isPresented in
+                    if !isPresented { viewModel.dismissError() }
+                }
+            )
+        ) {
+            Button("확인", role: .cancel) {}
+        }
         .toolbar(.hidden, for: .navigationBar)
         .navigationBarBackButtonHidden()
     }
@@ -104,21 +118,19 @@ private extension GameRoomView {
         }
     }
 
-    /// 준비 전에는 "준비 완료", 우리 팀 준비 후에는 "취소", 종목 선택부터는 버튼 없음.
+    /// 준비 전에는 "준비 완료", 우리 팀 준비 후에는 누를 수 없는 "취소", 종목 선택부터는 버튼 없음.
     @ViewBuilder
     var bottomButton: some View {
         if isWaiting {
             if viewModel.isMyTeamReady {
-                Button(action: viewModel.cancelReady) {
-                    Text("취소")
-                        .font(AppFont.subHeaderSSemiBold.font)
-                        .foregroundStyle(Color(hex: 0x888888))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 48)
-                        .background(Color(hex: 0xD9D9D9))
-                        .clipShape(RoundedRectangle(cornerRadius: 4))
-                }
-                .buttonStyle(.plain)
+                // 서버가 준비 취소를 지원하지 않아 디자인만 유지하고 탭은 받지 않음.
+                Text("취소")
+                    .font(AppFont.subHeaderSSemiBold.font)
+                    .foregroundStyle(Color(hex: 0x888888))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .background(Color(hex: 0xD9D9D9))
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
             } else {
                 PrimaryButton(title: "준비 완료", action: viewModel.ready)
             }
