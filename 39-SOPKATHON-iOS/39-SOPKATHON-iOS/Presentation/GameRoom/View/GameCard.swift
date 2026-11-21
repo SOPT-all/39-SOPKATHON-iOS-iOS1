@@ -31,6 +31,7 @@ struct GameCard: View {
                 )
                 .frame(height: infoAreaHeight)
                 .offset(y: infoAreaTop)
+                .allowsHitTesting(false)
             }
             .overlay(alignment: .topLeading) { content }
             .clipShape(RoundedRectangle(cornerRadius: 16))
@@ -57,12 +58,14 @@ private extension GameCard {
         }
     }
 
+    /// 카드보다 큰 이미지라 잘린 바깥 영역이 다른 카드의 터치를 가로채지 않게 터치를 막음.
     var backgroundImage: some View {
         Image(imageLayout.image)
             .resizable()
             .scaledToFill()
             .frame(width: imageLayout.size.width, height: imageLayout.size.height)
             .offset(imageLayout.offset)
+            .allowsHitTesting(false)
     }
 
     /// Figma `Frame 200`(블러·그라데이션 영역)의 카드 내 위치.
