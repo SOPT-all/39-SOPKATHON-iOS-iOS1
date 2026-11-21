@@ -50,10 +50,10 @@
     <td align="center"><b>iOS</b></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/Eda3399"><b>이름 입력</b></a><br><sub>@Eda3399</sub></td>
-    <td align="center"><a href="https://github.com/limtjdghks"><b>이름 입력</b></a><br><sub>@limtjdghks</sub></td>
     <td align="center"><a href="https://github.com/ser0kim"><b>김세령</b></a><br><sub>@ser0kim</sub></td>
-    <td align="center"><a href="https://github.com/siiooin"><b>이름 입력</b></a><br><sub>@siiooin</sub></td>
+    <td align="center"><a href="https://github.com/limtjdghks"><b>임성환</b></a><br><sub>@limtjdghks</sub></td>
+    <td align="center"><a href="https://github.com/Eda3399"><b>김보영</b></a><br><sub>@Eda3399</sub></td>
+    <td align="center"><a href="https://github.com/siiooin"><b>전시언</b></a><br><sub>@siiooin</sub></td>
   </tr>
   <tr>
     <td align="center"><code>담당 화면 입력</code><br><code>담당 기능 입력</code></td>
