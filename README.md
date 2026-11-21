@@ -3,6 +3,7 @@
 # 반하나:  우리 반이 하나 되는 온라인 운동회
 
 <!-- 서비스명 확정 후 위 제목을 변경하고, 필요하면 여기에 로고 또는 배너를 추가해 주세요. -->
+<img width="500" alt="banner" src="https://github.com/user-attachments/assets/84c7b180-bb98-4cf5-8587-9d6c08121b84" />
 
 ### 우리 반에서 시작되는, 새로운 연결
 
@@ -80,9 +81,8 @@
 
 | 앱 진입 · 홈 · 랭킹 | 매칭 · 게임방 | 말 달리기 | 소리 줄다리기 |
 | :---: | :---: | :---: | :---: |
-| <video src="https://github.com/user-attachments/assets/b56c9d44-cc92-44ff-924f-14b905fd9482" width="250"></video> | <video src="" width="250"></video> | <video src="" width="250"></video> | <video src="" width="250"></video> | 
+| <video src="https://github.com/user-attachments/assets/b56c9d44-cc92-44ff-924f-14b905fd9482" width="250"></video> | <video src="https://github.com/user-attachments/assets/17c7415f-e984-40ec-a34e-1251dd6e71be" width="250"></video> | <video src="https://github.com/user-attachments/assets/80e500c0-d15a-45f9-9e3b-72e042e35496" width="250"></video> | <video src="https://github.com/user-attachments/assets/625e1740-aa6a-4f8e-acc6-60263a716b94" width="250"></video> | 
 | 홈에서 전국 학교 순위 목록을 확인하고 학교·반과 선수 목록을 확인 후 게임 입장 합니다  | 양 팀 준비 후 종목을 고르고 3·2·1 카운트다운을 거쳐 게임을 시작합니다. | 화면을 연타해 완주하고, 기록과 승패 결과를 확인합니다. | 마이크로 10초간 측정하고 점수를 확인하고 승패 결과를 확인합니다. |
-
 
 ### 기술 스택
 
