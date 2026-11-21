@@ -29,7 +29,8 @@ struct HorseRaceGameOver: View {
                     opponentTeamRecord: .finishTime(
                         milliseconds: result.opponentTeamFinishTimeMilliseconds
                     ),
-                    score: result.score,
+                    // TODO: 서버 승점 연동이 안정되면 result.score로 되돌림. 지금은 시연용으로 300점 고정함.
+                    score: 300,
                     onNextGame: onNextGame,
                     onGoHome: onGoHome,
                     resultMessage: result.isWin == nil ? "무승부" : nil

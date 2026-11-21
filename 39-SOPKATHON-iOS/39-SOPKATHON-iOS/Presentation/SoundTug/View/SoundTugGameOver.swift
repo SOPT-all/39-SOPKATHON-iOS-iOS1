@@ -13,51 +13,39 @@ struct SoundTugGameOver: View {
     let result: SoundTugResult?
     let onNextGame: () -> Void
     let onGoHome: () -> Void
-    let isLoading: Bool
-    let statusMessage: String?
-    let onRetry: (() -> Void)?
 
     var body: some View {
         ZStack {
             Color.black.opacity(0.7)
 
+            // TODO: 서버 결과 연동이 안정되면 고정값 대신 result 값 사용 필요. 지금은 시연용으로 승리·팀 음량·점수를 고정함.
             GameResultPopup(
                 gameTitle: Game.tugOfWar.title,
                 mySchool: result?.mySchool ?? "우리 팀",
                 opponentSchool: result?.opponentSchool ?? "상대 팀",
-                isWin: isWin,
-                myTeamRecord: result?.myTeamTotalDecibel.map { .demoDecibel($0) },
-                opponentTeamRecord: result?.opponentTeamTotalDecibel.map { .demoDecibel($0) },
-                score: result?.reward,
+                isWin: true,
+                myTeamRecord: .demoDecibel(DemoResult.myTeamDecibel),
+                opponentTeamRecord: .demoDecibel(DemoResult.opponentTeamDecibel),
+                score: DemoResult.score,
                 onNextGame: onNextGame,
                 onGoHome: onGoHome,
                 teamRecordTitle: "총 음량",
                 personalRecord: .demoDecibel(personalDecibel),
-                personalRecordTitle: "내 최고 음량",
-                resultMessage: resultMessage,
-                isLoading: isLoading,
-                onRetry: onRetry
+                personalRecordTitle: "내 최고 음량"
             )
             .offset(y: -33)
         }
         .ignoresSafeArea()
     }
 
-    private var isWin: Bool? {
-        switch result?.outcome {
-        case .win: true
-        case .lose: false
-        case .draw, .invalid, nil: nil
-        }
-    }
+}
 
-    private var resultMessage: String? {
-        switch result?.outcome {
-        case .win, .lose: nil
-        case .draw: "무승부"
-        case .invalid: "무효 경기"
-        case nil: statusMessage
-        }
+private extension SoundTugGameOver {
+
+    enum DemoResult {
+        static let myTeamDecibel = 94.7
+        static let opponentTeamDecibel = 85.4
+        static let score = 300
     }
 
 }
