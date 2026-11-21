@@ -17,8 +17,8 @@ final class HorseRaceViewModel {
     private let runnerExitTapCount = 13
     // TODO: 서버 시작 신호 사용 여부 확정 후 카운트다운 대체 검토 필요.
     private let countdown: Duration = .seconds(3)
-    // 서버 명세의 경기 종료 상태 조회 간격과 같게 둠.
-    private let resultCheckInterval: Duration = .seconds(3)
+    // 결과를 빨리 띄우려고 서버 명세의 조회 간격(3초)보다 짧게 둠. 실패 재시도에도 같은 간격을 씀.
+    private let resultCheckInterval: Duration = .seconds(1)
 
     private let match: HorseRaceMatch?
     private let service: BaseService
