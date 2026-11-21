@@ -41,6 +41,8 @@ struct GameRoomView: View {
             guard let game else { return }
             onSelectGame(game)
         }
+        // 게임 화면에서 돌아오면 다시 준비부터 시작할 수 있게 함.
+        .onAppear { viewModel.resetAfterGame() }
         .onDisappear { viewModel.stop() }
         .toolbar(.hidden, for: .navigationBar)
         .navigationBarBackButtonHidden()

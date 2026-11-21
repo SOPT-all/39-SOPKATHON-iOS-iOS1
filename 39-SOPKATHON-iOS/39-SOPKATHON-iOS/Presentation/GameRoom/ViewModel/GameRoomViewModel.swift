@@ -100,6 +100,15 @@ final class GameRoomViewModel {
         phase = .started(game)
     }
 
+    /// 게임을 마치고 게임방으로 돌아오면 다음 판을 위해 준비 전 상태로 되돌림.
+    func resetAfterGame() {
+        guard case .started = phase else { return }
+        flowTask?.cancel()
+        isMyTeamReady = false
+        isOpponentReady = false
+        phase = .waiting
+    }
+
     /// 화면을 벗어나면 진행 중인 대기·카운트다운을 멈춤.
     func stop() {
         flowTask?.cancel()
