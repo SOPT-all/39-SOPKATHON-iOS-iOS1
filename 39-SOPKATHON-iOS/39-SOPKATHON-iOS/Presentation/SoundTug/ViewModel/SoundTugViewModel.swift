@@ -35,15 +35,6 @@ final class SoundTugViewModel {
         state == .preparing || state == .measuring
     }
 
-    var buttonTitle: String {
-        switch state {
-        case .ready: return "음량 측정 시작"
-        case .preparing: return "마이크 준비 중 · 취소"
-        case .measuring: return "소리를 질러주세요! · 중지"
-        case .finished, .failed: return "다시 측정하기"
-        }
-    }
-
     func start() {
         guard !isRunning else { return }
         currentScore = 0

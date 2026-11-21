@@ -93,7 +93,7 @@ struct SoundTugView: View {
                 ZStack(alignment: .leading) {
                     Color(white: 254 / 255)
                     Rectangle()
-                        .fill(Color(red: 189 / 255, green: 46 / 255, blue: 32 / 255))
+                        .fill(.mainRed)
                         .frame(
                             width: geometry.size.width
                                 * CGFloat(viewModel.currentScore / 100)
