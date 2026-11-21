@@ -1,4 +1,4 @@
-<div align="center">
+<div align="leading">
 
 # 서비스 이름
 
@@ -9,13 +9,6 @@
 초·중·고등학생이 함께하는 게임으로 반 사이의 연결을 이어가는 iOS 앱
 
 **39기 PLAY SOPT · 솝커톤 iOS 1조**
-
-![Swift](https://img.shields.io/badge/Swift-5-F05138?style=flat-square&logo=swift&logoColor=white)
-![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-007AFF?style=flat-square)
-![iOS](https://img.shields.io/badge/iOS-17.0%2B-111111?style=flat-square&logo=apple&logoColor=white)
-
-[GitHub Repository](https://github.com/SOPT-all/39-SOPKATHON-iOS-iOS1) · [서비스 기획](docs/project.md) · [기술 스택](docs/tech-stack.md)
-
 </div>
 
 <br>
@@ -123,9 +116,6 @@ PR 제목   [docs/#17] README 템플릿 작성
 <!-- 각 셀의 '사진 추가 예정'을 GitHub에 업로드한 이미지로 교체해 주세요.
 예시: <img src="업로드한 이미지 URL" width="180" alt="팀원 이름 Before 사진" />
 실제 사진이 준비되기 전에는 이미지 태그를 활성화하지 않습니다.
--->
+<img width="500" alt="스크린샷 2026-11-22 오전 1 11 39" src="https://github.com/user-attachments/assets/c8c3b1ab-e535-44cc-bf29-2772277e64f2" />
 
-| [@Eda3399](https://github.com/Eda3399) | [@limtjdghks](https://github.com/limtjdghks) | [@ser0kim](https://github.com/ser0kim) | [@siiooin](https://github.com/siiooin) |
-| :---: | :---: | :---: | :---: |
-| 📸 사진 추가 예정 | 📸 사진 추가 예정 | 📸 사진 추가 예정 | 📸 사진 추가 예정 |
-| 이름 입력 | 이름 입력 | 김세령 | 이름 입력 |
+
