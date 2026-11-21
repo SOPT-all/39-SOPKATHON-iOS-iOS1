@@ -10,7 +10,7 @@ import Foundation
 enum GameResult: Equatable {
 
     case horseRace(seconds: TimeInterval)
-    case tugOfWar(score: Double)
+    case tugOfWar(maxDecibel: Double)
 
     var game: Game {
         switch self {

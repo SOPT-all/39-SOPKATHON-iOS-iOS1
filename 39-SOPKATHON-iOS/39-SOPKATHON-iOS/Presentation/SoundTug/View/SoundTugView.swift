@@ -12,7 +12,6 @@ struct SoundTugView: View {
     let onFinish: (Double) -> Void
     let onNextGame: () -> Void
     let onGoHome: () -> Void
-    var result: SoundTugResult? = nil
 
     @Environment(\.scenePhase) private var scenePhase
     @State private var viewModel = SoundTugViewModel()
@@ -42,7 +41,7 @@ struct SoundTugView: View {
 
                 SoundTugIllustration(
                     isActive: isActive,
-                    progress: isActive ? viewModel.currentScore / 100 : 0
+                    progress: isActive ? viewModel.currentDecibel / 120 : 0
                 )
                 .frame(width: geometry.size.width, height: 164 * scale)
                 .position(
@@ -72,23 +71,21 @@ struct SoundTugView: View {
         .background(backgroundColor.ignoresSafeArea())
         .overlay {
             if viewModel.state == .finished {
-                SoundTugGameOver(
-                    personalScore: viewModel.highestScore,
-                    result: result,
-                    onNextGame: onNextGame,
-                    onGoHome: onGoHome
-                )
+                gameOver
             }
         }
         .onDisappear { viewModel.cancel() }
+        .onAppear { viewModel.loadResult() }
         .onChange(of: viewModel.state) { _, state in
             if state == .finished {
-                onFinish(viewModel.highestScore)
+                onFinish(viewModel.highestDecibel)
             }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background {
                 viewModel.cancel()
+            } else if phase == .active {
+                viewModel.loadResult()
             }
         }
     }
@@ -99,13 +96,27 @@ struct SoundTugView: View {
             : Color(white: 217 / 255)
     }
 
+    private var gameOver: some View {
+        let retry: (() -> Void)? = viewModel.resultState == .failed
+            ? { viewModel.loadResult() } : nil
+        return SoundTugGameOver(
+            personalDecibel: viewModel.highestDecibel,
+            result: viewModel.result,
+            onNextGame: onNextGame,
+            onGoHome: onGoHome,
+            isLoading: viewModel.isLoadingResult,
+            statusMessage: viewModel.resultMessage,
+            onRetry: retry
+        )
+    }
+
     private var personalRecord: some View {
         VStack(spacing: 10) {
             HStack {
                 Text("개인 기록")
                     .appFont(.bodyLSemiBold)
                 Spacer()
-                Text("이번 측정 최고 \(viewModel.highestScore, specifier: "%.1f")점")
+                Text("최고 \(viewModel.highestDecibel, specifier: "%.1f")dB(시연)")
                     .appFont(.bodyLSemiBold)
             }
             .foregroundStyle(.black)
@@ -117,9 +128,9 @@ struct SoundTugView: View {
                         .fill(.mainRed)
                         .frame(
                             width: geometry.size.width
-                                * CGFloat(viewModel.currentScore / 100)
+                                * CGFloat(viewModel.currentDecibel / 120)
                         )
-                    Text("현재 \(viewModel.currentScore, specifier: "%.1f")점")
+                    Text("현재 \(viewModel.currentDecibel, specifier: "%.1f")dB(시연)")
                         .appFont(.bodyLSemiBold)
                         .foregroundStyle(Color(white: 84 / 255))
                         .padding(.horizontal, 14)
@@ -129,8 +140,8 @@ struct SoundTugView: View {
             .frame(height: 41)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(
-                Text("현재 \(viewModel.currentScore, specifier: "%.1f")점, ")
-                    + Text("이번 측정 최고 \(viewModel.highestScore, specifier: "%.1f")점")
+                Text("현재 \(viewModel.currentDecibel, specifier: "%.1f") 시연 데시벨, ")
+                    + Text("이번 측정 최고 \(viewModel.highestDecibel, specifier: "%.1f") 시연 데시벨")
             )
         }
         .monospacedDigit()

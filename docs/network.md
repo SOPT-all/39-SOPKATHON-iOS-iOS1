@@ -48,7 +48,8 @@ let response: MatchReadyResponseDTO = try await BaseService.shared.request(
 ```
 
 위 DTO 이름은 사용 예시이며 아직 구현하지 않았음.
-`Info.plist`의 `MATCH_ID`·`MEMBER_ID`·`TEAM_SLOT`은 같은 이름의 빌드 설정을 문자열로 참조함.
-지금은 경마의 `HorseRaceMatch.demo`만 세 값을 읽음. 다른 화면도 쓰게 되면 공통 위치로 옮김.
+`Info.plist`의 `MATCH_ID`·`MEMBER_ID`는 같은 이름의 빌드 설정을 문자열로 참조함.
+줄다리기는 `SoundTugMatchContext`가 두 ID를 읽어 유효성을 검사하고 EndPoint에 전달함.
+우리 팀 슬롯은 시연 합의에 따라 1이며, 경기·멤버 ID를 임의 값으로 대체하지 않음.
 xcconfig의 값이 빌드된 Info.plist에 전달됨. 설정을 생략하면 빈 문자열이 될 수 있음.
 실제 호출 전 `BASE_URL` 빌드 설정에 서버 주소가 전달되는지 확인 필요함.

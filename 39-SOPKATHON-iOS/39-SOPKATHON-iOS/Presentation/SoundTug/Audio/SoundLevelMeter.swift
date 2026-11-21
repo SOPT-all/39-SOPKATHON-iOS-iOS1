@@ -50,12 +50,12 @@ final class SoundLevelMeter {
             ) { @Sendable [weak self]
                 buffer,
                 _ in
-                let score = Self.calculateScore(buffer: buffer)
+                let decibel = Self.calculateDecibel(buffer: buffer)
                 Task { @MainActor [weak self] in
                     guard let self,
                           self.measurementID == measurementID,
                           self.isMeasuring else { return }
-                    self.onUpdate?(.success(score))
+                    self.onUpdate?(.success(decibel))
                 }
             }
             hasInstalledTap = true
@@ -152,7 +152,7 @@ final class SoundLevelMeter {
         }
     }
 
-    nonisolated private static func calculateScore(buffer: AVAudioPCMBuffer) -> Double {
+    nonisolated private static func calculateDecibel(buffer: AVAudioPCMBuffer) -> Double {
         guard let channels = buffer.floatChannelData,
               buffer.frameLength > 0,
               buffer.format.channelCount > 0 else { return 0 }

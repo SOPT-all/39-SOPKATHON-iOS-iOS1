@@ -16,8 +16,8 @@ struct SoundTugResult: Equatable {
 
     let mySchool: String
     let opponentSchool: String
-    let myTeamTotalScore: Double
-    let opponentTeamTotalScore: Double
+    let myTeamTotalDecibel: Double?
+    let opponentTeamTotalDecibel: Double?
     let outcome: Outcome
 
     // TODO: 서버 승점 응답 확정 시 교체 필요.

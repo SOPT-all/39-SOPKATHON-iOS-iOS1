@@ -15,8 +15,8 @@ struct GameResultPopup: View {
     enum Record {
         /// 경마 `totalFinishTimeMilliseconds`. "12.50초"로 표시함.
         case finishTime(milliseconds: Int64)
-        /// 소리 줄다리기 팀 총 음량 점수. 물리적 데시벨이 아님.
-        case volumeScore(Double)
+        /// 시연 보정 음량 합계. 실제 소음계 SPL 측정값이 아님.
+        case demoDecibel(Double)
     }
 
     let gameTitle: String
@@ -33,6 +33,8 @@ struct GameResultPopup: View {
     var personalRecord: Record? = nil
     var personalRecordTitle = "내 기록"
     var resultMessage: String? = nil
+    var isLoading = false
+    var onRetry: (() -> Void)? = nil
 
     var body: some View {
         VStack(spacing: 13) {
@@ -65,6 +67,14 @@ private extension GameResultPopup {
                 .padding(.top, 14)
 
             VStack(spacing: 6) {
+                if let onRetry {
+                    GameResultButton(
+                        title: "다시 시도",
+                        foreground: .white,
+                        background: .mainRed,
+                        action: onRetry
+                    )
+                }
                 GameResultButton(
                     title: "다음 게임 이어가기",
                     foreground: .white,
@@ -90,6 +100,10 @@ private extension GameResultPopup {
     var records: some View {
         VStack(spacing: 8) {
             recordRow(title: "게임", value: gameTitle, isEmphasized: true)
+            if isLoading {
+                ProgressView()
+                    .tint(.mainRed)
+            }
             if let resultMessage {
                 Text(resultMessage)
                     .appFont(.captionLRegular)
@@ -122,8 +136,8 @@ private extension GameResultPopup {
         switch record {
         case .finishTime(let milliseconds):
             return String(format: "%.2f초", Double(milliseconds) / 1000)
-        case .volumeScore(let score):
-            return String(format: "%.1f점", score)
+        case .demoDecibel(let decibel):
+            return String(format: "%.1fdB(시연)", decibel)
         }
     }
 
