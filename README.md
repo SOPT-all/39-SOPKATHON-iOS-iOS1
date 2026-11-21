@@ -136,9 +136,4 @@ PR 제목   [docs/#17] README 템플릿 작성
 
 ## 05 · Before — 해커톤 시작 전, 우리
 
-<!-- 각 셀의 '사진 추가 예정'을 GitHub에 업로드한 이미지로 교체해 주세요.
-예시: <img src="업로드한 이미지 URL" width="180" alt="팀원 이름 Before 사진" />
-실제 사진이 준비되기 전에는 이미지 태그를 활성화하지 않습니다.
-<img width="500" alt="스크린샷 2026-11-22 오전 1 11 39" src="https://github.com/user-attachments/assets/c8c3b1ab-e535-44cc-bf29-2772277e64f2" />
-
-
+<img src="docs/images/team-before.png" width="800" alt="39기 솝커톤 iOS 1조 해커톤 시작 전 단체 사진" />
