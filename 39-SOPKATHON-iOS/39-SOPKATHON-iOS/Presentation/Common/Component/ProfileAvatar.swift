@@ -9,7 +9,7 @@ import SwiftUI
 
 /// 원형 프로필. 이름이 있으면 이름을, 없으면 캐릭터 실루엣을 표시함.
 /// 사용 예: ProfileAvatar(name: "륜영", size: 48), ProfileAvatar(name: nil, size: 72, style: .inactive)
-/// Figma는 이름을 손글씨 벡터로 그렸지만, 이름이 바뀌어야 해서 텍스트로 표시함.
+/// Figma 손글씨 이미지가 있는 이름은 이미지로, 없는 이름은 텍스트로 표시함.
 struct ProfileAvatar: View {
 
     enum Style {
@@ -46,9 +46,22 @@ struct ProfileAvatar: View {
 
 private extension ProfileAvatar {
 
+    /// Figma에 손글씨 이미지로 그려진 이름.
+    static let nameLetterings: [String: ImageResource] = [
+        "륜영": .imgNameRyunyeong,
+        "수현": .imgNameSuhyeon
+    ]
+
     @ViewBuilder
     var content: some View {
-        if let name {
+        if let name, let lettering = Self.nameLetterings[name] {
+            Image(lettering)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(foregroundColor)
+                .frame(width: size * 0.65)
+        } else if let name {
             Text(name)
                 .font(.pretendard(.extraBold, size: size * 0.34))
                 .foregroundStyle(foregroundColor)
