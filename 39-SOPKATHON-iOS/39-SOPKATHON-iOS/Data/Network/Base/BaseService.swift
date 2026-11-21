@@ -10,15 +10,11 @@ import Foundation
 final class BaseService {
     static let shared = BaseService()
 
-    // TODO: 성공 코드 입력 필요. 공란이면 성공 처리 안 함.
-    private let successCode = ""
-
     private let session: URLSession
     private let baseURLProvider: () -> String?
 
     private convenience init() {
         self.init(session: .shared) {
-            // TODO: xcconfig에 BASE_URL 설정 후 Info.plist 연결 필요.
             Bundle.main.object(forInfoDictionaryKey: "BASE_URL") as? String
         }
     }
@@ -109,14 +105,13 @@ private extension BaseService {
             )
         }
 
-        // TODO: 서버 응답 형식에 맞춰 BaseResponseDTO·디코딩 수정 필요.
         let decoded: BaseResponseDTO<Response>
         do {
             decoded = try JSONDecoder().decode(BaseResponseDTO<Response>.self, from: data)
         } catch {
             throw NetworkError.responseDecodingError(error)
         }
-        guard !successCode.isEmpty, decoded.code == successCode else {
+        guard (200..<300).contains(decoded.status) else {
             throw NetworkError.serverError(code: decoded.code)
         }
         guard let result = decoded.data else {

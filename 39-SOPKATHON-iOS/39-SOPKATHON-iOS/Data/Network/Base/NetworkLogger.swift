@@ -27,7 +27,8 @@ final class NetworkLogger {
                 "authorization",
                 "proxy-authorization",
                 "cookie",
-                "x-api-key"
+                "x-api-key",
+                "x-demo-member-id"
             ]
             let displayValue = sensitiveHeaders.contains(key.lowercased())
                 ? "[REDACTED]"
@@ -35,24 +36,16 @@ final class NetworkLogger {
             output += "\(key): \(displayValue)\n"
         }
 
-        if let body = request.httpBody {
-            output += "\nBody: \(String(data: body, encoding: .utf8) ?? "")"
-        }
-
         print("\(output)\n")
     }
 
-    static func responseLog(response: HTTPURLResponse?, data: Data?) {
+    static func responseLog(response: HTTPURLResponse?, data _: Data?) {
         print("\n⛑️Response")
 
         var output = ""
         if let statusCode = response?.statusCode {
             output += "StatusCode: \(statusCode)"
         }
-        if let data {
-            output += "\nBody: \(String(data: data, encoding: .utf8) ?? "")"
-        }
-
         print("\(output)\n")
     }
 

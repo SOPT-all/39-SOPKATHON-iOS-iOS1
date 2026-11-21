@@ -2,8 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
+	<key>BASE_URL</key>
+	<string>$(BASE_URL)</string>
+	<key>MATCH_ID</key>
+	<string>$(MATCH_ID)</string>
+	<key>MEMBER_ID</key>
+	<string>$(MEMBER_ID)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-Black.otf</string>
@@ -16,11 +20,5 @@
 		<string>Pretendard-SemiBold.otf</string>
 		<string>Pretendard-Thin.otf</string>
 	</array>
-	<key>BASE_URL</key>
-	<string>$(BASE_URL)</string>
-	<key>NSCameraUsageDescription</key>
-	<string>릴레이에 올릴 사진과 영상을 촬영하기 위해 카메라 접근 권한이 필요합니다.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>소리 줄다리기 게임의 음량 측정과 영상 촬영 시 소리 녹음을 위해 마이크 접근 권한이 필요합니다.</string>
 </dict>
 </plist>
