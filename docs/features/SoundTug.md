@@ -11,7 +11,7 @@
 | --- | --- |
 | `Presentation/SoundTug/Audio/SoundLevelMeter.swift` | 마이크 입력 수명 관리 |
 | `Presentation/SoundTug/Audio/SoundLevelScore.swift` | 게임 점수 환산 |
-| `Presentation/SoundTug/View/SoundTugView.swift` | Figma 준비·측정 화면 및 음량 반응 애니메이션 |
+| `Presentation/SoundTug/View/SoundTugView.swift` | Figma 준비·측정 화면, SVG 글자 및 음량 반응 애니메이션 |
 | `Presentation/SoundTug/ViewModel/SoundTugViewModel.swift` | 시간·현재 및 최고 점수 관리 |
 ## 상태와 데이터
 - 38점에서 소음 차단 해제, 35점 이하에서 차단함. 표시값만 상승 0.12초·하강 0.25초 보정하며 최고 기록은 차단 후 원본 사용함.
